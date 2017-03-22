@@ -11,5 +11,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:paddingLeft">12dp</item>
         <item name="android:paddingRight">12dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/color_navigationbar_text</item>
     </style>
 </resources>

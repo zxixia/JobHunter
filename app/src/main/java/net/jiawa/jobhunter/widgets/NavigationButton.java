@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 
 /**
@@ -26,7 +27,9 @@ public class NavigationButton extends TextView {
     }
 
     public void init(int id) {
-        Drawable drawable = getResources().getDrawable(R.drawable.tab_icon_explore);
-        this.setCompoundDrawables(null, drawable, null, null);
+        if (id > 0) {
+            Drawable drawable = getResources().getDrawable(id);
+            if (null != drawable) this.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+        }
     }
 }
