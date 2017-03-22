@@ -150,6 +150,9 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
     ValueAnimator getNavigationItemClickAnimator(int distance, final View view, final float animateMove) {
         if (distance < 0) return null;
         final ValueAnimator anim = new ValueAnimator();
+        // 这样能生成一条从0到1,然后在从1到0的序列
+        // 然后在onAnimationUpdate函数中执行Y轴方向的
+        // 变化,即可完成动画
         anim.setFloatValues(0.0f, 1.0f, 0.0f);
         anim.setDuration(500);
         anim.setInterpolator(new DecelerateInterpolator());
