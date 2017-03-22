@@ -214,7 +214,7 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
-    protected int findPosition(View child) {
+    protected int indexOf(View child) {
         if (null == mRoot) return -1;
         if (mRoot instanceof ViewGroup) {
             ViewGroup vg = (ViewGroup) mRoot;
@@ -229,5 +229,16 @@ public abstract class BaseFragment extends Fragment {
             return ((ViewGroup)mRoot).getChildCount();
         }
         return -1;
+    }
+
+    protected View getChildAt(int index) {
+        if (null == mRoot) return null;
+        if (index < 0 || index >= getChildCount()) {
+            return null;
+        }
+        if (mRoot instanceof ViewGroup) {
+            return ((ViewGroup)mRoot).getChildAt(index);
+        }
+        return null;
     }
 }

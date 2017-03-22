@@ -1,16 +1,18 @@
 package net.jiawa.jobhunter.module.navigationbar;
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
+import android.view.animation.DecelerateInterpolator;
 
 import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.fragments.BaseFragment;
+import net.jiawa.jobhunter.helper.AnimatorListenerHelper;
 import net.jiawa.jobhunter.widgets.NavigationButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -91,7 +93,7 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
     }
 
 
-    private AnimatorSet mAnimatorSet = null;
+    private AnimatorSet mAnimatorSet = new AnimatorSet();
     /***
      * 底部导航切换以后的动画,动画示意:
      * touch                    touch
@@ -106,36 +108,76 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
     private void animateSwitch() {
         if (null == mCurrentNavButton) return;
         if (getChildCount() < 0) return;
-        int currentIndex = findPosition(mCurrentNavButton);
+        int currentIndex = indexOf(mCurrentNavButton);
         if (currentIndex < 0) return;
 
-        int longDistance = -1;
-        // 保存每个View与当前点击的View的距离
-        int[] animateViewDistance = new int[getChildCount()];
         for (int i=0; i<getChildCount(); i++) {
-            animateViewDistance[i] = Math.abs(i - currentIndex);
-            if (longDistance < animateViewDistance[i]) {
-                longDistance = animateViewDistance[i];
-            }
+            if (i == currentIndex) continue;
+            View view = getChildAt(i);
+            if (null == view) continue;
+            int distance = Math.abs(i - currentIndex);
+            XLog.d(true, 1, "i: " + i + ", distance: " + distance + ", currentIndex: " + currentIndex);
+            // animatorList.add(getNavigationItemClickAnimator(distance - 1, view, 100));
+            // mAnimatorSet.play(getNavigationItemClickAnimator(distance - 1, view, 100));
+            getNavigationItemClickAnimator(distance - 1, view, 100).start();
         }
-        if (longDistance < 0) return;
 
-        ValueAnimator anim = new ValueAnimator();
-        anim.setIntValues(0, 10);
-        anim.setDuration(200);
+        /*ValueAnimator anim = new ValueAnimator();
+        anim.setFloatValues(0.0f, 1.0f, 0.0f);
+        anim.setDuration(500);
+        anim.setInterpolator(new DecelerateInterpolator());
+        final float originY = mCurrentNavButton.getY();
+        final float distance = 50;
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                int now = (int) animation.getAnimatedValue();
+                float now = (Float) animation.getAnimatedValue();
+                mCurrentNavButton.setY(originY + distance * now);
                 XLog.d(true, 1, "now: " + now);
             }
         });
-        anim.start();
+        anim.addListener(new AnimatorListenerHelper() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                XLog.d(true, 1, "originY: " + originY);
+                mCurrentNavButton.setY(originY);
+            }
+        });
+        anim.start();*/
+    }
 
-        //初始化
-        Animation translateAnimation = new TranslateAnimation(0.0f, 0.0f,0.0f,10.0f);
-        translateAnimation.setFillAfter(true);
-        //设置动画时间                translateAnimation.setDuration(1000);
-        mCurrentNavButton.startAnimation(translateAnimation);
+    ValueAnimator getNavigationItemClickAnimator(int distance, final View view, final float animateMove) {
+        if (distance < 0) return null;
+        final ValueAnimator anim = new ValueAnimator();
+        anim.setFloatValues(0.0f, 1.0f, 0.0f);
+        anim.setDuration(500);
+        anim.setInterpolator(new DecelerateInterpolator());
+        anim.setStartDelay(distance * 100);
+
+        final float oriY = view.getY();
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                view.setY(oriY + value * animateMove);
+            }
+        });
+
+        anim.addListener(new AnimatorListenerHelper() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                XLog.d(true, 1, "onAnimationEnd");
+                view.setY(oriY);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+                view.setY(oriY);
+            }
+        });
+        return anim;
     }
 }
