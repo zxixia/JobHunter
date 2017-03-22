@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <net.jiawa.jobhunter.widgets.NavigationButton
+        android:id="@+id/tv_navigationbar_item_job"
+        style="@style/sty_navigationbar_items"
+        android:text="工作"/>
+    <net.jiawa.jobhunter.widgets.NavigationButton
+        android:id="@+id/tv_navigationbar_item_coder"
+        style="@style/sty_navigationbar_items"
+        android:text="码农"/>
+    <net.jiawa.jobhunter.widgets.NavigationButton
+        android:id="@+id/tv_navigationbar_item_news"
+        style="@style/sty_navigationbar_items"
+        android:text="新闻"/>
+    <net.jiawa.jobhunter.widgets.NavigationButton
+        android:id="@+id/tv_navigationbar_item_about"
+        style="@style/sty_navigationbar_items"
+        android:text="关于"/>
+</LinearLayout>
