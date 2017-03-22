@@ -21,3 +21,16 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+/***
+ * copy from OSChina, to write down the properties values here
+ */
+ext {
+    compileSdkVersion = 25
+    buildToolsVersion = "25.0.2"
+    applicationId = "net.jiawa.jobhunter"
+    minSdkVersion = 19
+    targetSdkVersion = 24
+    versionCode = 1
+    versionName = "v1.0.0(201703221038)"
+    supportVersion = '25.1.0'
+}
