@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 
-import net.oschina.app.util.ImageLoader;
+import net.jiawa.jobhunter.utils.ImageLoader;
 
 import java.io.Serializable;
 
