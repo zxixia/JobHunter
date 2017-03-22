@@ -213,4 +213,21 @@ public abstract class BaseFragment extends Fragment {
     protected void onRestartInstance(Bundle bundle) {
 
     }
+
+    protected int findPosition(View child) {
+        if (null == mRoot) return -1;
+        if (mRoot instanceof ViewGroup) {
+            ViewGroup vg = (ViewGroup) mRoot;
+            return vg.indexOfChild(child);
+        }
+        return -1;
+    }
+
+    protected int getChildCount() {
+        if (null == mRoot) return -1;
+        if (mRoot instanceof ViewGroup) {
+            return ((ViewGroup)mRoot).getChildCount();
+        }
+        return -1;
+    }
 }

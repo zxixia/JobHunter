@@ -7,6 +7,9 @@
     <!--
       以颜色为主的颜色命名方式
     -->
-    <color name="blue_jiawa">#0180C3</color>
+    <color name="blue_0180C3">#0180C3</color>
     <color name="gray_666">#666</color>
+    <color name="gray_c8c7cc">#c8c7cc</color>
+
+    <color name="jiawa_main">@color/blue_0180C3</color>
 </resources>
