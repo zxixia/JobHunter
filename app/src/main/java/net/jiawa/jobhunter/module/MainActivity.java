@@ -14,7 +14,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         XLog.setup(1, XLog.Flag(
-                new XFlag(1, true, "DogFood")
+                new XFlag(1, false, "DogFood"),
+                new XFlag(2, true, "Animate")
         ));
     }
 

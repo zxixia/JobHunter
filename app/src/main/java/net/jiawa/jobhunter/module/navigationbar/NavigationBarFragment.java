@@ -77,6 +77,10 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
     }
 
     private void doSelect(NavigationButton newNavButton) {
+        if (null != mAnimatorSet && isAnimating) {
+            XLog.d(false, 2);
+            return;
+        }
         NavigationButton oldNavButton = null;
         if (mCurrentNavButton != null) {
             oldNavButton = mCurrentNavButton;
@@ -92,6 +96,38 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
         animateSwitch();
     }
 
+    private void updateAnimating(boolean animating) {
+        synchronized (mAnimatingObject) {
+            isAnimating = animating;
+        }
+    }
+    private boolean isAnimating = false;
+    private Object mAnimatingObject = new Object();
+    private AnimatorListenerHelper mAnimatorListenerHelper = new AnimatorListenerHelper() {
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            super.onAnimationCancel(animation);
+            updateAnimating(false);
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            super.onAnimationEnd(animation);
+            updateAnimating(false);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+            super.onAnimationRepeat(animation);
+            updateAnimating(true);
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+            super.onAnimationStart(animation);
+            updateAnimating(true);
+        }
+    };
 
     private AnimatorSet mAnimatorSet = new AnimatorSet();
     /***
@@ -111,40 +147,21 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
         int currentIndex = indexOf(mCurrentNavButton);
         if (currentIndex < 0) return;
 
+        /**
+         * 每次都需要new一个AnimatorSet,否则动画会有卡顿
+         */
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet.addListener(mAnimatorListenerHelper);
+
         for (int i=0; i<getChildCount(); i++) {
             if (i == currentIndex) continue;
             View view = getChildAt(i);
             if (null == view) continue;
             int distance = Math.abs(i - currentIndex);
-            XLog.d(true, 1, "i: " + i + ", distance: " + distance + ", currentIndex: " + currentIndex);
-            // animatorList.add(getNavigationItemClickAnimator(distance - 1, view, 100));
-            // mAnimatorSet.play(getNavigationItemClickAnimator(distance - 1, view, 100));
-            getNavigationItemClickAnimator(distance - 1, view, 100).start();
+            XLog.d(false, 1, "i: " + i + ", distance: " + distance + ", currentIndex: " + currentIndex);
+            mAnimatorSet.play(getNavigationItemClickAnimator(distance - 1, view, 100));
         }
-
-        /*ValueAnimator anim = new ValueAnimator();
-        anim.setFloatValues(0.0f, 1.0f, 0.0f);
-        anim.setDuration(500);
-        anim.setInterpolator(new DecelerateInterpolator());
-        final float originY = mCurrentNavButton.getY();
-        final float distance = 50;
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float now = (Float) animation.getAnimatedValue();
-                mCurrentNavButton.setY(originY + distance * now);
-                XLog.d(true, 1, "now: " + now);
-            }
-        });
-        anim.addListener(new AnimatorListenerHelper() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                XLog.d(true, 1, "originY: " + originY);
-                mCurrentNavButton.setY(originY);
-            }
-        });
-        anim.start();*/
+        mAnimatorSet.start();
     }
 
     ValueAnimator getNavigationItemClickAnimator(int distance, final View view, final float animateMove) {
@@ -171,7 +188,7 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                XLog.d(true, 1, "onAnimationEnd");
+                XLog.d(false, 1, "onAnimationEnd");
                 view.setY(oriY);
             }
 
