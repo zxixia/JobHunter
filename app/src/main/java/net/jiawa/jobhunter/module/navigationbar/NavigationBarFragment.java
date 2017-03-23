@@ -11,9 +11,6 @@ import net.jiawa.jobhunter.base.fragments.BaseFragment;
 import net.jiawa.jobhunter.helper.AnimatorListenerHelper;
 import net.jiawa.jobhunter.widgets.NavigationButton;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.OnClick;
 
@@ -69,7 +66,7 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
     }
 
     private void onReselect(NavigationButton reselectNavButton) {
-
+        doReSelectAnimate();
     }
 
     private void doTabChanged(NavigationButton oldNavButton, NavigationButton newNavButton) {
@@ -93,7 +90,7 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
         newNavButton.setSelected(true);
         doTabChanged(oldNavButton, newNavButton);
         mCurrentNavButton = newNavButton;
-        animateSwitch();
+        doSelectAnimate();
     }
 
     private void updateAnimating(boolean animating) {
@@ -141,7 +138,7 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
      *   就是以当前点击的item为中心,
      *   向两边扩散,其他点先降落然后再升起
      */
-    private void animateSwitch() {
+    private void doSelectAnimate() {
         if (null == mCurrentNavButton) return;
         if (getChildCount() < 0) return;
         int currentIndex = indexOf(mCurrentNavButton);
@@ -164,6 +161,17 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
         mAnimatorSet.start();
     }
 
+    private void doReSelectAnimate() {
+        if (null == mCurrentNavButton) return;
+        /**
+         * 每次都需要new一个AnimatorSet,否则动画会有卡顿
+         */
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet.addListener(mAnimatorListenerHelper);
+        mAnimatorSet.play(getNavigationItemClickAnimator(0, mCurrentNavButton, 100));
+        mAnimatorSet.start();
+    }
+
     ValueAnimator getNavigationItemClickAnimator(int distance, final View view, final float animateMove) {
         if (distance < 0) return null;
         final ValueAnimator anim = new ValueAnimator();
@@ -171,9 +179,9 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
         // 然后在onAnimationUpdate函数中执行Y轴方向的
         // 变化,即可完成动画
         anim.setFloatValues(0.0f, 1.0f, 0.0f);
-        anim.setDuration(500);
+        anim.setDuration(700);
         anim.setInterpolator(new DecelerateInterpolator());
-        anim.setStartDelay(distance * 100);
+        anim.setStartDelay(distance * 200);
 
         final float oriY = view.getY();
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
