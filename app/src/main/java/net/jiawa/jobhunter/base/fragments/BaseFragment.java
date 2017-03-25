@@ -1,6 +1,7 @@
 package net.jiawa.jobhunter.base.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -240,5 +241,12 @@ public abstract class BaseFragment extends Fragment {
             return ((ViewGroup)mRoot).getChildAt(index);
         }
         return null;
+    }
+
+    protected void startActivity(Class<?> cls) {
+        if (null != mContext) {
+            Intent intent = new Intent(mContext, cls);
+            startActivity(intent);
+        }
     }
 }

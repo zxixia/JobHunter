@@ -2,6 +2,7 @@ package net.jiawa.jobhunter.module.navigationbar;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
@@ -9,6 +10,7 @@ import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.fragments.BaseFragment;
 import net.jiawa.jobhunter.helper.AnimatorListenerHelper;
+import net.jiawa.jobhunter.module.git.ProjectDetailActivity;
 import net.jiawa.jobhunter.widgets.NavigationButton;
 
 import butterknife.Bind;
@@ -70,7 +72,9 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
     }
 
     private void doTabChanged(NavigationButton oldNavButton, NavigationButton newNavButton) {
-
+        if (newNavButton.getId() == R.id.tv_navigationbar_item_about) {
+            startActivity(ProjectDetailActivity.class);
+        }
     }
 
     private void doSelect(NavigationButton newNavButton) {
@@ -151,12 +155,12 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
         mAnimatorSet.addListener(mAnimatorListenerHelper);
 
         for (int i=0; i<getChildCount(); i++) {
-            if (i == currentIndex) continue;
+            // if (i == currentIndex) continue;
             View view = getChildAt(i);
             if (null == view) continue;
             int distance = Math.abs(i - currentIndex);
             XLog.d(false, 1, "i: " + i + ", distance: " + distance + ", currentIndex: " + currentIndex);
-            mAnimatorSet.play(getNavigationItemClickAnimator(distance - 1, view, 100));
+            mAnimatorSet.play(getNavigationItemClickAnimator(distance, view, 100));
         }
         mAnimatorSet.start();
     }
