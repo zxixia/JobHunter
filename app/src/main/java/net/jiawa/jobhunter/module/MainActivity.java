@@ -1,6 +1,5 @@
 package net.jiawa.jobhunter.module;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import net.jiawa.debughelper.XLog;
@@ -14,13 +13,19 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         XLog.setup(1, XLog.Flag(
-                new XFlag(1, false, "DogFood"),
-                new XFlag(2, true, "Animate")
+                new XFlag(1, true, "DogFood"),
+                new XFlag(2, false, "Animate")
         ));
     }
 
     @Override
     protected int getContentView() {
         return R.layout.activity_main;
+    }
+
+    // 定义在BaseActivity中的方法
+    @Override
+    protected void initData() {
+        super.initData();
     }
 }

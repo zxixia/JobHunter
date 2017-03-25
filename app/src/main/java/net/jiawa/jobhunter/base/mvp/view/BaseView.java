@@ -1,4 +1,6 @@
-package net.jiawa.jobhunter.base;
+package net.jiawa.jobhunter.base.mvp.view;
+
+import net.jiawa.jobhunter.base.mvp.presenter.BasePresenter;
 
 /**
  * Created by haibin

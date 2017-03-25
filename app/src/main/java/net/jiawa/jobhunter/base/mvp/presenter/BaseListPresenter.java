@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.base;
+package net.jiawa.jobhunter.base.mvp.presenter;
 
 /**
  * Created by haibin
