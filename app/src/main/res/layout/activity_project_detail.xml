@@ -7,4 +7,10 @@
         android:layout_height="match_parent"
         android:id="@+id/fl_content">
     </FrameLayout>
+    <net.jiawa.jobhunter.widgets.EmptyLayout
+        android:id="@+id/el_projectdetail_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+    </net.jiawa.jobhunter.widgets.EmptyLayout>
 </FrameLayout>

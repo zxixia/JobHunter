@@ -33,4 +33,11 @@ public interface ProjectDetailContract {
 
         void showGetDetailFailure(String str);
     }
+
+    // ProjectDetailActivity
+    // 继承这个,处理网络请求相关状态
+    interface EmptyView extends BaseView<Presenter> {
+        void showGetDetailSuccess();
+        void showGetDetailFailure();
+    }
 }

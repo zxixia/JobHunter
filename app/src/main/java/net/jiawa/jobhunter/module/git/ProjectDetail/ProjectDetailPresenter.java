@@ -21,8 +21,10 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     // 执行视图操作的View对象
     private ProjectDetailContract.View mView;
     private TextHttpResponseHandler mHandler;
+    private ProjectDetailContract.EmptyView mEmptyView;
 
-    public ProjectDetailPresenter(ProjectDetailContract.View view) {
+    public ProjectDetailPresenter(ProjectDetailContract.View view, ProjectDetailContract.EmptyView emptyView) {
+        mEmptyView = emptyView;
         mView = view;
         initHandler();
         mView.setPresenter(this);
@@ -35,6 +37,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 XLog.d(true, 1, statusCode + ", " + headers + ", " + responseString + ", " + throwable);
                 mView.showGetDetailFailure("请求数据失败");
+                mEmptyView.showGetDetailFailure();
             }
 
             @Override
@@ -43,6 +46,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
                 if (null != bean) {
                     XLog.d(true, 1, "private: " + bean.getPrivate() + ", " + bean.getId());
                     mView.showGetDetailSuccess(bean);
+                    mEmptyView.showGetDetailSuccess();
                 }
             }
         };
