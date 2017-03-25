@@ -3,6 +3,7 @@ package net.jiawa.jobhunter.module.git.projectdetail;
 import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.activities.BaseBackActivity;
+import net.jiawa.jobhunter.bean.git.projectdetail.Repository;
 
 /**
  * Created by xixia on 2017/3/25.
@@ -23,15 +24,17 @@ public class ProjectDetailActivity extends BaseBackActivity implements ProjectDe
     @Override
     protected void initWidget() {
         super.initWidget();
-        final ProjectDetailContract.Presenter presenter = new ProjectDetailPresenter(this);
+        ProjectDetailFragment fragment = ProjectDetailFragment.newInstance();
+        final ProjectDetailContract.Presenter presenter = new ProjectDetailPresenter(fragment);
         presenter.getRepository("zxixia", "JobHunter");
         // presenter.getContents("https://api.github.com/repos/zxixia/JobHunter/contents/{+path}", null);
         // presenter.getContents("https://api.github.com/repos/zxixia/JobHunter/contents/{+path}", "");
+        addFragment(R.id.fl_content, fragment);
     }
 
     @Override
-    public void showGetDetailSuccess(String str) {
-        XLog.d(false, 1, str);
+    public void showGetDetailSuccess(Repository repository) {
+
     }
 
     @Override

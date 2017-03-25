@@ -39,10 +39,10 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                mView.showGetDetailSuccess(responseString);
                 Repository bean = new Gson().fromJson(responseString, Repository.class);
                 if (null != bean) {
                     XLog.d(true, 1, "private: " + bean.getPrivate() + ", " + bean.getId());
+                    mView.showGetDetailSuccess(bean);
                 }
             }
         };

@@ -6,6 +6,7 @@ package net.jiawa.jobhunter.module.git.projectdetail;
 
 import net.jiawa.jobhunter.base.mvp.presenter.BasePresenter;
 import net.jiawa.jobhunter.base.mvp.view.BaseView;
+import net.jiawa.jobhunter.bean.git.projectdetail.Repository;
 
 /**
  * 参考OSChina客户端的MVP架构
@@ -28,7 +29,7 @@ public interface ProjectDetailContract {
     }
 
     interface View extends BaseView<Presenter> {
-        void showGetDetailSuccess(String str);
+        void showGetDetailSuccess(Repository repository);
 
         void showGetDetailFailure(String str);
     }
