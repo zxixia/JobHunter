@@ -1,12 +1,14 @@
-package net.jiawa.jobhunter.module.git.ProjectDetail;
+package net.jiawa.jobhunter.module.git.projectdetail;
 
 /**
  * Created by lenovo on 2017/3/25.
  */
 
+import com.google.gson.Gson;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import net.jiawa.debughelper.XLog;
+import net.jiawa.jobhunter.bean.git.projectdetail.Repository;
 import net.jiawa.jobhunter.module.git.GitHubAPI;
 
 import cz.msebera.android.httpclient.Header;
@@ -38,6 +40,10 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 mView.showGetDetailSuccess(responseString);
+                Repository bean = new Gson().fromJson(responseString, Repository.class);
+                if (null != bean) {
+                    XLog.d(true, 1, "private: " + bean.getPrivate() + ", " + bean.getId());
+                }
             }
         };
     }

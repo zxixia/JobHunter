@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.module.git.ProjectDetail;
+package net.jiawa.jobhunter.module.git.projectdetail;
 
 import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
@@ -25,18 +25,18 @@ public class ProjectDetailActivity extends BaseBackActivity implements ProjectDe
         super.initWidget();
         final ProjectDetailContract.Presenter presenter = new ProjectDetailPresenter(this);
         presenter.getRepository("zxixia", "JobHunter");
-        presenter.getContents("https://api.github.com/repos/zxixia/JobHunter/contents/{+path}", null);
-        presenter.getContents("https://api.github.com/repos/zxixia/JobHunter/contents/{+path}", "");
+        // presenter.getContents("https://api.github.com/repos/zxixia/JobHunter/contents/{+path}", null);
+        // presenter.getContents("https://api.github.com/repos/zxixia/JobHunter/contents/{+path}", "");
     }
 
     @Override
     public void showGetDetailSuccess(String str) {
-        XLog.d(true, 1, str);
+        XLog.d(false, 1, str);
     }
 
     @Override
     public void showGetDetailFailure(String str) {
-        XLog.d(true, 1, str);
+        XLog.d(false, 1, str);
     }
 
     @Override
