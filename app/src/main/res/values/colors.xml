@@ -13,4 +13,5 @@
     <color name="white_ffffff">#ffffff</color>
 
     <color name="jiawa_main">@color/blue_0180C3</color>
+    <color name="ripple_loading_color">@color/gray_666</color>
 </resources>

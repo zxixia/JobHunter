@@ -10,6 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="JobHunter" />
+    <net.jiawa.jobhunter.widgets.RippleLoadingView
+        android:layout_width="100dp"
+        android:layout_height="300dp"
+        android:layout_marginLeft="50dp"
+        android:background="@color/blue_0180C3"/>
     <View
         android:id="@+id/fag_maincontent"
         android:layout_width="match_parent"
@@ -19,11 +24,7 @@
       a divider line between the bottom navigation bar
       and the main content
     -->
-    <View
-        android:layout_height="1dp"
-        android:layout_width="match_parent"
-        android:background="@color/gray_c8c7cc"
-        />
+    <View style="@style/sty_horizontal_line"/>
     <fragment
         android:id="@+id/fag_navigationbar"
         android:layout_width="match_parent"
