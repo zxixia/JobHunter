@@ -57,6 +57,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.belerweb:pinyin4j:2.5.1'
+    compile 'net.jiawa:net-jiawa-debughelper:1.0.0'
     testCompile 'junit:junit:4.12'
-    compile project(path: ':debugHelper')
 }
