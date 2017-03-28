@@ -4,6 +4,7 @@ package net.jiawa.jobhunter.widgets;
  * Created by lenovo on 2017/3/26.
  */
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,6 +12,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
@@ -40,6 +43,8 @@ public class RippleLoadingView extends View implements Runnable {
     private float mRippleMinRadius;
     private float mRippleMaxRadius;
     private Paint mRipplePaint;
+    private float mDrawRippleRadius;
+    private float mDrawRippleRadius2;
 
     public RippleLoadingView(Context context) {
         super(context);
@@ -113,12 +118,27 @@ public class RippleLoadingView extends View implements Runnable {
         mRippleMaxRadius = (float) (Math.sqrt(width2 + height2) / 2);
     }
 
-    private synchronized void prepare() {
+    private void initCircle() {
         mCirclePaint = new Paint();
         mCirclePaint.setAntiAlias(true);
         mCirclePaint.setColor(getContext().getResources().getColor(R.color.gray_666));
         initCircleRadius();
+    }
+
+    private void initRipple() {
         initRippleRadius();
+        mRipplePaint = new Paint();
+        mRipplePaint.setAntiAlias(true);
+        mRipplePaint.setColor(getContext().getResources().getColor(R.color.colorAccent));
+        mRipplePaint.setStyle(Paint.Style.STROKE);
+
+        mDrawRippleRadius = mRippleMinRadius;
+    }
+
+    private synchronized void prepare() {
+        initCircle();
+        initRipple();
+
         // 初始将中心园绘制在mCacheBitmap上面,
         // 这样不需要每次在onDraw中都绘制一遍这个中心园,
         // 只需要更新每条水波纹即可
@@ -135,10 +155,37 @@ public class RippleLoadingView extends View implements Runnable {
         // 绘制中心园
         canvas.drawCircle(mCenterX, mCenterY, mCircleRadius, mCirclePaint);
 
-        mRipplePaint = new Paint();
-        mRipplePaint.setAntiAlias(true);
-        mRipplePaint.setColor(getContext().getResources().getColor(R.color.colorAccent));
-        mRipplePaint.setStyle(Paint.Style.STROKE);
+        final ValueAnimator anim = new ValueAnimator();
+        anim.setFloatValues(mRippleMinRadius, mRippleMaxRadius);
+        XLog.d(true, 1, "mRippleMinRadius: " + mRippleMinRadius + ", mRippleMaxRadius: " + mRippleMaxRadius);
+        anim.setDuration(5000);
+        anim.setInterpolator(new AccelerateInterpolator());
+        anim.setRepeatMode(ValueAnimator.RESTART);
+        anim.setRepeatCount(-1);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mDrawRippleRadius = (float) animation.getAnimatedValue();
+                XLog.d(true, 1, "mDrawRippleRadius: " + mDrawRippleRadius);
+            }
+        });
+        anim.start();
+
+        final ValueAnimator anim2 = new ValueAnimator();
+        anim2.setFloatValues(mRippleMinRadius, mRippleMaxRadius);
+        anim2.setDuration(5000);
+        anim2.setInterpolator(new AccelerateInterpolator());
+        anim2.setRepeatMode(ValueAnimator.RESTART);
+        anim2.setRepeatCount(-1);
+        anim2.setStartDelay(1000);
+        anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mDrawRippleRadius2 = (float) animation.getAnimatedValue();
+                XLog.d(true, 1, "mDrawRippleRadius: " + mDrawRippleRadius2);
+            }
+        });
+        anim2.start();
         postRepaint();
     }
 
@@ -151,8 +198,8 @@ public class RippleLoadingView extends View implements Runnable {
         if (mCacheBitmap != null) canvas.drawBitmap(mCacheBitmap, 0, 0, mCirclePaint);
 
         // 尝试绘制两条极端的运动半径下的水波纹
-        canvas.drawCircle(mCenterX, mCenterY, mRippleMaxRadius - 10, mRipplePaint);
-        canvas.drawCircle(mCenterX, mCenterY, mRippleMinRadius + 10, mRipplePaint);
+        canvas.drawCircle(mCenterX, mCenterY, mDrawRippleRadius, mRipplePaint);
+        canvas.drawCircle(mCenterX, mCenterY, mDrawRippleRadius2, mRipplePaint);
 
         // 恢复原始canvas状态
         canvas.restoreToCount(count);
