@@ -50,7 +50,8 @@ public class EmptyLayout extends LinearLayout {
     }
 
     TextView mStatus;
-    ProgressBar mLoading;
+    // ProgressBar mLoading;
+    RippleLoadingView mLoading;
 
     /**
      * 用代码动态创建这个EmptyLayout,
@@ -67,9 +68,14 @@ public class EmptyLayout extends LinearLayout {
         // 让里面的两个控件往上靠一点
         this.setPadding(this.getPaddingLeft(), this.getPaddingTop(), this.getPaddingRight(), 350);
 
-        mLoading = new ProgressBar(getContext());
+        /*mLoading = new ProgressBar(getContext());
         LinearLayout.LayoutParams lpLoading = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
+        mLoading.setLayoutParams(lpLoading);*/
+
+        mLoading = new RippleLoadingView(getContext());
+        LinearLayout.LayoutParams lpLoading = new LinearLayout.LayoutParams(
+                200, 200);
         mLoading.setLayoutParams(lpLoading);
 
         mStatus = new TextView(getContext());
@@ -99,7 +105,7 @@ public class EmptyLayout extends LinearLayout {
             case HIDE_LAYOUT:
                 // 加载成功
                 // 隐藏当前View
-                setVisibility(View.GONE);
+                // setVisibility(View.GONE);
                 break;
         }
     }

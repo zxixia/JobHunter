@@ -13,10 +13,11 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 
 import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
+
+import java.util.ArrayList;
 
 /**
  * 仿照OSChina的SolarSystemView写的一个
@@ -43,17 +44,18 @@ public class RippleLoadingView extends View implements Runnable {
     private float mRippleMinRadius;
     private float mRippleMaxRadius;
     private Paint mRipplePaint;
-    private float mDrawRippleRadius;
-    private float mDrawRippleRadius2;
+
+    // 动画时间
+    final long DURATION = 3 * 1000;
 
     public RippleLoadingView(Context context) {
         super(context);
-        //setWillNotDraw(false);
     }
+
+    private ArrayList<Ripple> mRipples;
 
     public RippleLoadingView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        //setWillNotDraw(false);
     }
 
     private void postRepaint() {
@@ -100,9 +102,9 @@ public class RippleLoadingView extends View implements Runnable {
      * 初始化中心圆心的半径
      */
     private void initCircleRadius() {
-        final int minRadius = 20;
+        final int minRadius = 8;
         final int minCanvas = getWidth() < getHeight() ? getWidth() : getHeight();
-        mCircleRadius = minCanvas/6 > minRadius ? minCanvas/6 : minRadius;
+        mCircleRadius = minCanvas/10 > minRadius ? minCanvas/10 : minRadius;
         XLog.d(false, 1, "width: " + getWidth() + ", height: " + getHeight() + ", minCanvas/4: " + minCanvas/4);
     }
 
@@ -115,29 +117,57 @@ public class RippleLoadingView extends View implements Runnable {
         // 最大运动半径就是当前View的中间斜连线的一半
         final int width2 = getWidth() * getWidth();
         final int height2 = getHeight() * getHeight();
-        mRippleMaxRadius = (float) (Math.sqrt(width2 + height2) / 2);
+        // 这样的动画会有折断的样子
+        // mRippleMaxRadius = (float) (Math.sqrt(width2 + height2) / 2);
+        mRippleMaxRadius = getWidth() < getHeight() ? getWidth()/2 : getHeight()/2;
     }
 
     private void initCircle() {
         mCirclePaint = new Paint();
         mCirclePaint.setAntiAlias(true);
-        mCirclePaint.setColor(getContext().getResources().getColor(R.color.gray_666));
+        mCirclePaint.setColor(getContext().getResources().getColor(R.color.jiawa_main));
         initCircleRadius();
     }
 
-    private void initRipple() {
+    private void initRipples() {
         initRippleRadius();
         mRipplePaint = new Paint();
         mRipplePaint.setAntiAlias(true);
-        mRipplePaint.setColor(getContext().getResources().getColor(R.color.colorAccent));
+        mRipplePaint.setColor(getContext().getResources().getColor(R.color.jiawa_main));
+        mRipplePaint.setStrokeWidth(5);
         mRipplePaint.setStyle(Paint.Style.STROKE);
+        // 开启3条水波纹
+        setupRipples(3);
+    }
 
-        mDrawRippleRadius = mRippleMinRadius;
+    private void setupRipples(int num) {
+        mRipples = new ArrayList<Ripple>();
+        final long _delay = DURATION / num;
+        for (int i=0; i<num; i++) {
+            mRipples.add(new Ripple(mRippleMinRadius, i*_delay, DURATION));
+        }
+    }
+
+    private void startAnim(final Ripple ripple) {
+        final ValueAnimator anim = new ValueAnimator();
+        anim.setFloatValues(mRippleMinRadius, mRippleMaxRadius-8);
+        anim.setDuration(ripple.duration);
+        anim.setInterpolator(new AccelerateInterpolator());
+        anim.setRepeatMode(ValueAnimator.RESTART);
+        anim.setRepeatCount(-1);
+        anim.setStartDelay(ripple.delay);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                ripple.radius = (float) animation.getAnimatedValue();
+            }
+        });
+        anim.start();
     }
 
     private synchronized void prepare() {
         initCircle();
-        initRipple();
+        initRipples();
 
         // 初始将中心园绘制在mCacheBitmap上面,
         // 这样不需要每次在onDraw中都绘制一遍这个中心园,
@@ -155,37 +185,11 @@ public class RippleLoadingView extends View implements Runnable {
         // 绘制中心园
         canvas.drawCircle(mCenterX, mCenterY, mCircleRadius, mCirclePaint);
 
-        final ValueAnimator anim = new ValueAnimator();
-        anim.setFloatValues(mRippleMinRadius, mRippleMaxRadius);
-        XLog.d(true, 1, "mRippleMinRadius: " + mRippleMinRadius + ", mRippleMaxRadius: " + mRippleMaxRadius);
-        anim.setDuration(5000);
-        anim.setInterpolator(new AccelerateInterpolator());
-        anim.setRepeatMode(ValueAnimator.RESTART);
-        anim.setRepeatCount(-1);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mDrawRippleRadius = (float) animation.getAnimatedValue();
-                XLog.d(true, 1, "mDrawRippleRadius: " + mDrawRippleRadius);
-            }
-        });
-        anim.start();
+        // 开启每条水波纹的动画
+        for (int i=0; i<mRipples.size(); i++) {
+            startAnim(mRipples.get(i));
+        }
 
-        final ValueAnimator anim2 = new ValueAnimator();
-        anim2.setFloatValues(mRippleMinRadius, mRippleMaxRadius);
-        anim2.setDuration(5000);
-        anim2.setInterpolator(new AccelerateInterpolator());
-        anim2.setRepeatMode(ValueAnimator.RESTART);
-        anim2.setRepeatCount(-1);
-        anim2.setStartDelay(1000);
-        anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mDrawRippleRadius2 = (float) animation.getAnimatedValue();
-                XLog.d(true, 1, "mDrawRippleRadius: " + mDrawRippleRadius2);
-            }
-        });
-        anim2.start();
         postRepaint();
     }
 
@@ -195,13 +199,26 @@ public class RippleLoadingView extends View implements Runnable {
         // super.onDraw(canvas);
         // 保存原始绘制状态
         int count = canvas.save();
-        if (mCacheBitmap != null) canvas.drawBitmap(mCacheBitmap, 0, 0, mCirclePaint);
 
         // 尝试绘制两条极端的运动半径下的水波纹
-        canvas.drawCircle(mCenterX, mCenterY, mDrawRippleRadius, mRipplePaint);
-        canvas.drawCircle(mCenterX, mCenterY, mDrawRippleRadius2, mRipplePaint);
+        for (int i=0; i<mRipples.size(); i++) {
+            canvas.drawCircle(mCenterX, mCenterY, mRipples.get(i).radius, mRipplePaint);
+        }
+
+        if (mCacheBitmap != null) canvas.drawBitmap(mCacheBitmap, 0, 0, mCirclePaint);
 
         // 恢复原始canvas状态
         canvas.restoreToCount(count);
+    }
+
+    class Ripple {
+        float radius;
+        long delay;
+        long duration;
+        Ripple(float radius, long delay, long duration) {
+            this.radius = radius;
+            this.delay = delay;
+            this.duration = duration;
+        }
     }
 }
