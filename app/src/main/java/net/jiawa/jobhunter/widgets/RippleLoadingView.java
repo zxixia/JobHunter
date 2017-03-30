@@ -134,10 +134,10 @@ public class RippleLoadingView extends View implements Runnable {
         mRipplePaint = new Paint();
         mRipplePaint.setAntiAlias(true);
         mRipplePaint.setColor(getContext().getResources().getColor(R.color.jiawa_main));
-        mRipplePaint.setStrokeWidth(5);
+        mRipplePaint.setStrokeWidth(2);
         mRipplePaint.setStyle(Paint.Style.STROKE);
-        // 开启3条水波纹
-        setupRipples(3);
+        // 开启5条水波纹
+        setupRipples(5);
     }
 
     private void setupRipples(int num) {
@@ -150,7 +150,7 @@ public class RippleLoadingView extends View implements Runnable {
 
     private void startAnim(final Ripple ripple) {
         final ValueAnimator anim = new ValueAnimator();
-        anim.setFloatValues(mRippleMinRadius, mRippleMaxRadius-8);
+        anim.setFloatValues(0, 1);
         anim.setDuration(ripple.duration);
         anim.setInterpolator(new AccelerateInterpolator());
         anim.setRepeatMode(ValueAnimator.RESTART);
@@ -159,7 +159,8 @@ public class RippleLoadingView extends View implements Runnable {
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                ripple.radius = (float) animation.getAnimatedValue();
+                ripple.radius = mRippleMinRadius + (mRippleMaxRadius - mRippleMinRadius) * (float) animation.getAnimatedValue();
+                ripple.alpha = 1 - (float) animation.getAnimatedValue();
             }
         });
         anim.start();
@@ -202,6 +203,8 @@ public class RippleLoadingView extends View implements Runnable {
 
         // 尝试绘制两条极端的运动半径下的水波纹
         for (int i=0; i<mRipples.size(); i++) {
+            // 指定水波纹的alpha,这样效果更好
+            mRipplePaint.setAlpha((int) (mRipples.get(i).alpha * 255));
             canvas.drawCircle(mCenterX, mCenterY, mRipples.get(i).radius, mRipplePaint);
         }
 
@@ -215,6 +218,7 @@ public class RippleLoadingView extends View implements Runnable {
         float radius;
         long delay;
         long duration;
+        float alpha;
         Ripple(float radius, long delay, long duration) {
             this.radius = radius;
             this.delay = delay;

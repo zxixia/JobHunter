@@ -4,43 +4,94 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200px"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_projectdetail_name"
+            android:layout_width="match_parent"
+            android:layout_height="50px"/>
+        <TextView
+            android:id="@+id/tv_projectdetail_language"
+            android:layout_width="wrap_content"
+            android:layout_height="50px"
+            android:background="@color/gray_666"
+            android:textColor="@android:color/white"/>
+        <View style="@style/sty_horizontal_line"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="stars"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/tv_projectdetail_stars"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="watchers"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/tv_projectdetail_watchers"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="forks"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/tv_projectdetail_forks"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"/>
+            </LinearLayout>
+        </LinearLayout>
+        <View style="@style/sty_horizontal_line"/>
+    </LinearLayout>
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-        <LinearLayout
+        <!-- Project Description -->
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="100px"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_projectdetail_name"
-                android:layout_width="match_parent"
-                android:layout_height="30px"/>
-            <TextView
-                android:id="@+id/tv_projectdetail_language"
-                android:layout_width="match_parent"
-                android:layout_height="30px" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:layout_weight="1">
-                <TextView
-                    android:id="@+id/tv_projectdetail_stars"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:id="@+id/tv_projectdetail_watchers"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
-                <TextView
-                    android:id="@+id/tv_projectdetail_forks"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
-            </LinearLayout>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_projectdetail_desc"
+            />
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

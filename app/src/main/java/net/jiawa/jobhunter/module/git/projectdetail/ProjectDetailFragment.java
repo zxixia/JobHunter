@@ -24,6 +24,8 @@ public class ProjectDetailFragment extends BaseFragment implements ProjectDetail
     TextView mWathers;
     @Bind(R.id.tv_projectdetail_forks)
     TextView mForks;
+    @Bind(R.id.tv_projectdetail_desc)
+    TextView mDescriptions;
 
     public static ProjectDetailFragment newInstance() {
         ProjectDetailFragment fragment = new ProjectDetailFragment();
@@ -61,5 +63,6 @@ public class ProjectDetailFragment extends BaseFragment implements ProjectDetail
         mStars.setText(String.valueOf(repository.getStargazersCount()));
         mForks.setText(String.valueOf(repository.getForksCount()));
         mWathers.setText(String.valueOf(repository.getWatchersCount()));
+        mDescriptions.setText(String.valueOf(repository.getDescription()));
     }
 }
