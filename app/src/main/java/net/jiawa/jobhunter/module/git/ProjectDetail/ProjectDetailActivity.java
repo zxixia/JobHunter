@@ -1,9 +1,7 @@
-package net.jiawa.jobhunter.module.git.ProjectDetail;
+package net.jiawa.jobhunter.module.git.projectdetail;
 
-import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.activities.BaseBackActivity;
-import net.jiawa.jobhunter.bean.git.projectdetail.Repository;
 import net.jiawa.jobhunter.widgets.EmptyLayout;
 
 import butterknife.Bind;

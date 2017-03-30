@@ -105,7 +105,7 @@ public class EmptyLayout extends LinearLayout {
             case HIDE_LAYOUT:
                 // 加载成功
                 // 隐藏当前View
-                // setVisibility(View.GONE);
+                setVisibility(View.GONE);
                 break;
         }
     }
