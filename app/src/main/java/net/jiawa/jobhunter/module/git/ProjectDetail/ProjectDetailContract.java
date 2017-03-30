@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.module.git.projectdetail;
+package net.jiawa.jobhunter.module.git.ProjectDetail;
 
 /**
  * Created by xixia on 2017/3/25.
