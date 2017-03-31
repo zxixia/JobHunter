@@ -51,7 +51,8 @@ public class EmptyLayout extends LinearLayout {
 
     TextView mStatus;
     // ProgressBar mLoading;
-    RippleLoadingView mLoading;
+    // RippleLoadingView mLoading;
+    CircleLoadingView mLoading;
 
     /**
      * 用代码动态创建这个EmptyLayout,
@@ -73,7 +74,7 @@ public class EmptyLayout extends LinearLayout {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         mLoading.setLayoutParams(lpLoading);*/
 
-        mLoading = new RippleLoadingView(getContext());
+        mLoading = new CircleLoadingView(getContext());
         LinearLayout.LayoutParams lpLoading = new LinearLayout.LayoutParams(
                 200, 200);
         mLoading.setLayoutParams(lpLoading);
