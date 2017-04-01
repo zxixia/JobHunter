@@ -58,7 +58,7 @@ public class ProjectDetailFragment extends BaseFragment implements ProjectDetail
     }
 
     private void initProject(Repository repository) {
-        mProjectName.setText(String.valueOf(repository.getName()));
+        mProjectName.setText(String.valueOf(repository.getFullName()));
         mLanguage.setText(String.valueOf(repository.getLanguage()));
         mStars.setText(String.valueOf(repository.getStargazersCount()));
         mForks.setText(String.valueOf(repository.getForksCount()));

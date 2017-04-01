@@ -43,7 +43,7 @@ public class CircleLoadingView extends View implements Runnable {
     private Ball mBall;
 
     // 动画时间
-    final long DURATION = (long) (2.5 * 1000);
+    final long DURATION = (long) (1.5 * 1000);
 
     public CircleLoadingView(Context context) {
         super(context);
