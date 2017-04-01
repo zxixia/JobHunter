@@ -25,7 +25,7 @@ public interface ProjectDetailContract {
         // 类似：https://api.github.com/repos/zxixia/JobHunter
         void getRepository(String owner, String repoName);
 
-        void getContents(String contents_url, String path);
+        void getContents(String contents_url, String path, EmptyView emptyView);
 
         void getReadMe();
     }

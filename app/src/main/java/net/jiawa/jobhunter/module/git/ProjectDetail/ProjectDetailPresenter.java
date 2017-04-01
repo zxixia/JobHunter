@@ -64,15 +64,17 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     }
 
     @Override
-    public void getContents(final String contents_url, String path) {
+    public void getContents(final String contents_url, String path, final ProjectDetailContract.EmptyView emptyView) {
         GitHubAPI.getContents(contents_url, path, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 XLog.d(true, 3, "failure");
+                emptyView.showGetDetailFailure();
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                emptyView.showGetDetailSuccess();
                 XLog.d(true, 3, responseString);
                 Type listType = new TypeToken<LinkedList<Content>>(){}.getType();
                 Gson gson = new Gson();

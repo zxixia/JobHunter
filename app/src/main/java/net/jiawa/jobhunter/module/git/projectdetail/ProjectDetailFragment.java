@@ -5,6 +5,7 @@ import android.widget.TextView;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.fragments.BaseFragment;
 import net.jiawa.jobhunter.bean.git.projectdetail.Repository;
+import net.jiawa.jobhunter.widgets.EmptyLayout;
 
 import butterknife.Bind;
 
@@ -12,7 +13,7 @@ import butterknife.Bind;
  * Created by lenovo on 2017/3/25.
  */
 
-public class ProjectDetailFragment extends BaseFragment implements ProjectDetailContract.View {
+public class ProjectDetailFragment extends BaseFragment implements ProjectDetailContract.View, ProjectDetailContract.EmptyView {
 
     @Bind(R.id.tv_projectdetail_name)
     TextView mProjectName;
@@ -26,6 +27,8 @@ public class ProjectDetailFragment extends BaseFragment implements ProjectDetail
     TextView mForks;
     @Bind(R.id.tv_projectdetail_desc)
     TextView mDescriptions;
+    @Bind(R.id.el_projectreadme_loading)
+    EmptyLayout mEmptyLayout;
 
     // 注意只和接口发生关联
     ProjectDetailContract.Presenter mPresenter;
@@ -69,6 +72,17 @@ public class ProjectDetailFragment extends BaseFragment implements ProjectDetail
         mDescriptions.setText(String.valueOf(repository.getDescription()));
 
         // 请求Contents数据
-        mPresenter.getContents(repository.getContentsUrl(), null);
+        mEmptyLayout.updateStatus(EmptyLayout.STATUS.START, "加载README.MD...");
+        mPresenter.getContents(repository.getContentsUrl(), null, this);
+    }
+
+    @Override
+    public void showGetDetailSuccess() {
+        mEmptyLayout.updateStatus(EmptyLayout.STATUS.STOP);
+    }
+
+    @Override
+    public void showGetDetailFailure() {
+        mEmptyLayout.updateStatus(EmptyLayout.STATUS.ERROR);
     }
 }
