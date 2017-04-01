@@ -27,6 +27,9 @@ public class ProjectDetailFragment extends BaseFragment implements ProjectDetail
     @Bind(R.id.tv_projectdetail_desc)
     TextView mDescriptions;
 
+    // 注意只和接口发生关联
+    ProjectDetailContract.Presenter mPresenter;
+
     public static ProjectDetailFragment newInstance() {
         ProjectDetailFragment fragment = new ProjectDetailFragment();
         return fragment;
@@ -49,7 +52,7 @@ public class ProjectDetailFragment extends BaseFragment implements ProjectDetail
 
     @Override
     public void setPresenter(ProjectDetailContract.Presenter presenter) {
-
+        mPresenter = presenter;
     }
 
     @Override
@@ -64,5 +67,8 @@ public class ProjectDetailFragment extends BaseFragment implements ProjectDetail
         mForks.setText(String.valueOf(repository.getForksCount()));
         mWathers.setText(String.valueOf(repository.getWatchersCount()));
         mDescriptions.setText(String.valueOf(repository.getDescription()));
+
+        // 请求Contents数据
+        mPresenter.getContents(repository.getContentsUrl(), null);
     }
 }

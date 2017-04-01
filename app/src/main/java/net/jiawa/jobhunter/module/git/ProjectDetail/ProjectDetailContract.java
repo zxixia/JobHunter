@@ -26,6 +26,8 @@ public interface ProjectDetailContract {
         void getRepository(String owner, String repoName);
 
         void getContents(String contents_url, String path);
+
+        void getReadMe();
     }
 
     interface View extends BaseView<Presenter> {
