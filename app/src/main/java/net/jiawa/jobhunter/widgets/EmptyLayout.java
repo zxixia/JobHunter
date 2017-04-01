@@ -25,14 +25,13 @@ import net.jiawa.jobhunter.R;
  * 当加载完成后,隐藏这个界面
  * 显示用户数据
  */
-public class EmptyLayout extends LinearLayout {
+public class EmptyLayout extends LinearLayout implements View.OnClickListener {
 
-    public static final int HIDE_LAYOUT = 4;
-    public static final int NETWORK_ERROR = 1;
-    public static final int NETWORK_LOADING = 2;
-    public static final int NODATA = 3;
-    public static final int NODATA_ENABLE_CLICK = 5;
-    public static final int NO_LOGIN = 6;
+    public enum STATUS {
+        START,
+        STOP,
+        ERROR
+    }
 
     public EmptyLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -49,6 +48,8 @@ public class EmptyLayout extends LinearLayout {
         init();
     }
 
+    // 显示错误提示的TextView
+    TextView mErrorTips;
     TextView mStatus;
     // ProgressBar mLoading;
     // RippleLoadingView mLoading;
@@ -70,6 +71,15 @@ public class EmptyLayout extends LinearLayout {
         // 让里面的两个控件往上靠一点
         this.setPadding(this.getPaddingLeft(), this.getPaddingTop(), this.getPaddingRight(), 350);
 
+        mErrorTips = new TextView(getContext());
+        LinearLayout.LayoutParams lpErrorTips = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        mErrorTips.setText("出错啦!");
+        mErrorTips.setLayoutParams(lpErrorTips);
+        // 启动时先隐藏
+        mErrorTips.setVisibility(View.GONE);
+        mErrorTips.setTextSize(30);
+
         /*mLoading = new ProgressBar(getContext());
         LinearLayout.LayoutParams lpLoading = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -87,28 +97,61 @@ public class EmptyLayout extends LinearLayout {
         lpStatus.topMargin = 30;
         mStatus.setLayoutParams(lpStatus);
 
+        this.addView(mErrorTips);
         this.addView(mLoading);
         this.addView(mStatus);
+        this.setOnClickListener(this);
     }
 
-    public void setType(int id) {
+    public void updateStatus(STATUS status) {
+        if (status == STATUS.START)
+            throw new RuntimeException("Can not call with the 'STATUS.START' status!");
+        updateStatus(status, "");
+    }
+
+    public void updateStatus(STATUS status, String text) {
         // 先显示当前的View
         setVisibility(View.VISIBLE);
-        switch (id) {
-            case NETWORK_LOADING:
-                // do nothing
-                mStatus.setText("加载中...");
-                break;
-            case NETWORK_ERROR:
-                // do nothing
-                // 一直显示Loading状态
-                mStatus.setText("加载中...");
-                break;
-            case HIDE_LAYOUT:
-                // 加载成功
-                // 隐藏当前View
-                setVisibility(View.GONE);
-                break;
+        boolean isSTART = status == STATUS.START;
+        boolean isSTOP = status == STATUS.STOP;
+        boolean isERROR = status == STATUS.ERROR;
+
+        if (isSTART) {
+            // 禁止响应点击事件
+            clickEnable = false;
+            mStatus.setVisibility(View.VISIBLE);
+            mLoading.setVisibility(View.VISIBLE);
+            mErrorTips.setVisibility(View.GONE);
+            mStatus.setText(text);
+            setVisibility(View.VISIBLE);
+        }
+        if (isSTOP) {
+            // 禁止响应点击事件
+            clickEnable = false;
+            setVisibility(View.INVISIBLE);
+        }
+        if (isERROR) {
+            // 允许响应点击事件
+            clickEnable = true;
+            // 隐藏Loading转圈和status
+            mStatus.setVisibility(View.GONE);
+            mLoading.setVisibility(View.GONE);
+            mErrorTips.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public interface onErrorListener {
+        void onError();
+    }
+    private boolean clickEnable = false;
+    private onErrorListener mListener = null;
+    public void setOnErrorListener(onErrorListener l) {
+        this.mListener = l;
+    }
+    @Override
+    public void onClick(View v) {
+        if (clickEnable && null != mListener) {
+            mListener.onError();
         }
     }
 }

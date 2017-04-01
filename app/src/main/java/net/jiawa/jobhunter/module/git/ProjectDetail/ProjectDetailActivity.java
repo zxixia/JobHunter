@@ -28,10 +28,17 @@ public class ProjectDetailActivity extends BaseBackActivity implements ProjectDe
     @Override
     protected void initWidget() {
         super.initWidget();
-        mEmptyLayout.setType(EmptyLayout.NETWORK_LOADING);
+        mEmptyLayout.updateStatus(EmptyLayout.STATUS.START, "加载中...");
         ProjectDetailFragment fragment = ProjectDetailFragment.newInstance();
         final ProjectDetailContract.Presenter presenter = new ProjectDetailPresenter(fragment, this);
         presenter.getRepository("zxixia", "JobHunter");
+        mEmptyLayout.setOnErrorListener(new EmptyLayout.onErrorListener() {
+            @Override
+            public void onError() {
+                mEmptyLayout.updateStatus(EmptyLayout.STATUS.START, "加载中...");
+                presenter.getRepository("zxixia", "JobHunter");
+            }
+        });
         // presenter.getContents("https://api.github.com/repos/zxixia/JobHunter/contents/{+path}", null);
         // presenter.getContents("https://api.github.com/repos/zxixia/JobHunter/contents/{+path}", "");
         addFragment(R.id.fl_content, fragment);
@@ -39,12 +46,12 @@ public class ProjectDetailActivity extends BaseBackActivity implements ProjectDe
 
     @Override
     public void showGetDetailSuccess() {
-        mEmptyLayout.setType(EmptyLayout.HIDE_LAYOUT);
+        mEmptyLayout.updateStatus(EmptyLayout.STATUS.STOP);
     }
 
     @Override
     public void showGetDetailFailure() {
-        mEmptyLayout.setType(EmptyLayout.NETWORK_ERROR);
+        mEmptyLayout.updateStatus(EmptyLayout.STATUS.ERROR);
     }
 
     @Override
