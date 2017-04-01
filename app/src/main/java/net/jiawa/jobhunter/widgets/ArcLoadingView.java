@@ -15,6 +15,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import net.jiawa.debughelper.XLog;
@@ -116,7 +118,7 @@ public class ArcLoadingView extends View implements Runnable {
     private void startAnim() {
         final ValueAnimator anim = new ValueAnimator();
         // 小球滚动的度数
-        anim.setIntValues(0, 360, 720);
+        anim.setIntValues(0, 720);
         anim.setDuration(DURATION);
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
         anim.setRepeatMode(ValueAnimator.RESTART);
@@ -127,7 +129,7 @@ public class ArcLoadingView extends View implements Runnable {
             public void onAnimationUpdate(ValueAnimator animation) {
                 // mBall.update((Integer) animation.getAnimatedValue());
                 mArc.update((Integer) animation.getAnimatedValue());
-                XLog.d(true, 1, "angle: " + animation.getAnimatedValue());
+                XLog.d(false, 1, "angle: " + animation.getAnimatedValue());
             }
         });
         anim.start();
