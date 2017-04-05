@@ -6,6 +6,8 @@ import android.view.View;
 
 
 import net.jiawa.jobhunter.R;
+import net.jiawa.jobhunter.base.adapter.BaseGeneralRecyclerAdapter;
+import net.jiawa.jobhunter.base.adapter.BaseRecyclerAdapter;
 import net.jiawa.jobhunter.base.mvp.presenter.BaseListPresenter;
 import net.jiawa.jobhunter.base.mvp.view.BaseListView;
 import net.jiawa.jobhunter.widgets.RecyclerRefreshLayout;
