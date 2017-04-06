@@ -2,11 +2,107 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fl_content">
-    </FrameLayout>
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="300px"
+            android:orientation="vertical"
+            android:background="#f9f9f9"
+            android:paddingTop="10dp">
+            <TextView
+                android:id="@+id/tv_projectdetail_name"
+                android:layout_width="match_parent"
+                android:layout_height="50px"
+                android:text="作者/项目名"
+                android:textSize="20dp"
+                android:layout_marginLeft="15dp"/>
+            <TextView
+                android:id="@+id/tv_projectdetail_language"
+                android:layout_width="wrap_content"
+                android:textSize="10sp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dra_git_language_background"
+                android:text="Android"
+                android:paddingBottom="3dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:paddingTop="3dp"
+                android:gravity="center"
+                android:textColor="#9d9d9d"
+                android:layout_marginLeft="15dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="stars"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/tv_projectdetail_stars"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="watchers"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/tv_projectdetail_watchers"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="forks"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/tv_projectdetail_forks"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                </LinearLayout>
+            </LinearLayout>
+            <View style="@style/sty_horizontal_line"/>
+        </LinearLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/fl_content">
+        </FrameLayout>
+    </LinearLayout>
     <net.jiawa.jobhunter.widgets.EmptyLayout
         android:id="@+id/el_projectdetail_loading"
         android:layout_width="match_parent"

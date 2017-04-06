@@ -1,66 +1,78 @@
 package net.jiawa.jobhunter.module.git.projectdetail;
 
+import android.widget.TextView;
+
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.activities.BaseBackActivity;
+import net.jiawa.jobhunter.bean.git.projectdetail.Repository;
 import net.jiawa.jobhunter.widgets.EmptyLayout;
 
 import butterknife.Bind;
 
 /**
- * Created by xixia on 2017/3/25.
+ * Created by zhaoxin5 on 2017/4/6.
  */
 
-/**
- * 实现了View的方法,通过View的回调进行视图的更新
- * 这里不需要考虑具体业务逻辑的处理
- */
-public class ProjectDetailActivity extends BaseBackActivity implements ProjectDetailContract.EmptyView {
+public class ProjectDetailActivity extends BaseBackActivity implements ProjectDetailContract.BasicInfoView {
 
+    @Bind(R.id.tv_projectdetail_name)
+    TextView mProjectName;
+    @Bind(R.id.tv_projectdetail_language)
+    TextView mLanguage;
+    @Bind(R.id.tv_projectdetail_stars)
+    TextView mStars;
+    @Bind(R.id.tv_projectdetail_watchers)
+    TextView mWathers;
+    @Bind(R.id.tv_projectdetail_forks)
+    TextView mForks;
     @Bind(R.id.el_projectdetail_loading)
     EmptyLayout mEmptyLayout;
+
+    private ProjectDetailContract.BasicInfoPresenter mPresenter;
 
     @Override
     protected int getContentView() {
         return R.layout.activity_project_detail;
     }
 
-    // 这是定义在BaseActivity中的方法
     @Override
     protected void initWidget() {
         super.initWidget();
-        mEmptyLayout.updateStatus(EmptyLayout.STATUS.START, "加载中...");
-        ProjectDetailFragment fragment = ProjectDetailFragment.newInstance();
-        final ProjectDetailContract.Presenter presenter = new ProjectDetailPresenter(fragment, this);
-        presenter.getRepository("zxixia", "JobHunter");
-        mEmptyLayout.setOnErrorListener(new EmptyLayout.onErrorListener() {
-            @Override
-            public void onError() {
-                mEmptyLayout.updateStatus(EmptyLayout.STATUS.START, "加载中...");
-                presenter.getRepository("zxixia", "JobHunter");
-            }
-        });
-        // presenter.getContents("https://api.github.com/repos/zxixia/JobHunter/contents/{+path}", null);
-        // presenter.getContents("https://api.github.com/repos/zxixia/JobHunter/contents/{+path}", "");
-        addFragment(R.id.fl_content, fragment);
+        mEmptyLayout.updateStatus(EmptyLayout.STATUS.START, "拼命加载中...");
+        mPresenter = new ProjectDetailBasicInfoPresenter(this);
+        mPresenter.getRepository("zxixia", "JobHunter");
     }
 
     @Override
-    public void showGetDetailSuccess() {
+    protected void initWindow() {
+        super.initWindow();
+
+    }
+
+    @Override
+    public void onGetRepositorySuccess(Repository repository) {
         mEmptyLayout.updateStatus(EmptyLayout.STATUS.STOP);
+
+        mProjectName.setText(String.valueOf(repository.getFullName()));
+        mLanguage.setText(String.valueOf(repository.getLanguage()));
+        mStars.setText(String.valueOf(repository.getStargazersCount()));
+        mForks.setText(String.valueOf(repository.getForksCount()));
+        mWathers.setText(String.valueOf(repository.getWatchersCount()));
+
+        // 准备加载工程的文件
+        ProjectDetailCodeTreeFragment fragment =  ProjectDetailCodeTreeFragment.newInstance();
+        addFragment(R.id.fl_content, fragment);
+        ProjectDetailCodeTreePresenter presenter = new ProjectDetailCodeTreePresenter(fragment, repository);
     }
 
     @Override
-    public void showGetDetailFailure() {
+    public void onGetRepositoryFailed() {
         mEmptyLayout.updateStatus(EmptyLayout.STATUS.ERROR);
     }
 
     @Override
-    public void setPresenter(ProjectDetailContract.Presenter presenter) {
-
-    }
+    public void setPresenter(ProjectDetailContract.BasicInfoPresenter presenter) {}
 
     @Override
-    public void showNetworkError(int strId) {
-
-    }
+    public void showNetworkError(int strId) {}
 }
