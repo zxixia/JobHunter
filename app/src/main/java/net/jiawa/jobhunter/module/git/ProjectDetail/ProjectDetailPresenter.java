@@ -9,7 +9,6 @@ import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import net.jiawa.debughelper.XLog;
-import net.jiawa.jobhunter.bean.git.projectdetail.Content;
 import net.jiawa.jobhunter.bean.git.projectdetail.Repository;
 import net.jiawa.jobhunter.module.git.GitHubAPI;
 import net.jiawa.jobhunter.utils.EncodingUtils;
@@ -78,23 +77,6 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 emptyView.showGetDetailSuccess();
                 XLog.d(true, 3, responseString);
-                Type listType = new TypeToken<LinkedList<Content>>(){}.getType();
-                LinkedList<Content> contents = new Gson().fromJson(responseString, listType);
-                int i = 1;
-                for (Content content : contents) {
-                    XLog.d(true, 3, i + ", " + content.getName() + ", " + content.getLinks().getHtml());
-                    i++;
-                }
-                try {
-                    XLog.d(true, 3,
-                            new String(
-                                    EncodingUtils.fromBase64("" +
-                                            "IyBKb2JIdW50ZXIKQW5kcm9pZCBhcHAgdG8gc2VhcmNoL3ZpZXcgdGhlIGpv\\nYiBmcm9tIHRoZSB3ZWIuCg==\\n"),
-                                    "UTF-8")
-                    );
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
             }
         });
     }

@@ -24,10 +24,13 @@ public interface ProjectDetailContract {
 
     // Presenter to
     interface CodeTreePresenter extends BaseListPresenter {
-        void getCodeTree();
+        void getCodeTree(String path);
     }
 
     interface CodeTreeView extends BaseListView<CodeTreePresenter, File> {
-        void onGetCodeTreeSuccess();
+        /**
+         * 这里无需实现是么回调
+         * 主要的刷新都在BaseListView里面了，
+         */
     }
 }

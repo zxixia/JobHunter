@@ -61,6 +61,12 @@ public class ProjectDetailActivity extends BaseBackActivity implements ProjectDe
         mForks.setText(String.valueOf(repository.getForksCount()));
         mWathers.setText(String.valueOf(repository.getWatchersCount()));
         mDescriptions.setText(String.valueOf(repository.getDescription()));
+
+        // 准备加载工程的文件
+        ProjectDetailCodeTreeFragment fragment =  ProjectDetailCodeTreeFragment.newInstance();
+        addFragment(R.id.fl_content, fragment);
+        ProjectDetailCodeTreePresenter presenter = new ProjectDetailCodeTreePresenter(fragment, repository);
+        presenter.getCodeTree(null);
     }
 
     @Override
