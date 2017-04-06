@@ -1,0 +1,33 @@
+package net.jiawa.jobhunter.module.git.project_detail;
+
+import net.jiawa.jobhunter.base.mvp.presenter.BaseListPresenter;
+import net.jiawa.jobhunter.base.mvp.presenter.BasePresenter;
+import net.jiawa.jobhunter.base.mvp.view.BaseListView;
+import net.jiawa.jobhunter.base.mvp.view.BaseView;
+import net.jiawa.jobhunter.bean.git.projectdetail.File;
+import net.jiawa.jobhunter.bean.git.projectdetail.Repository;
+
+/**
+ * Created by zhaoxin5 on 2017/4/6.
+ */
+
+public interface ProjectDetailContract {
+
+    interface BasicInfoPresenter extends BasePresenter {
+        void getRepository(String owner, String repoName);
+    }
+
+    interface BasicInfoView extends BaseView<BasicInfoPresenter> {
+        void onGetRepositorySuccess(Repository repository);
+        void onGetRepositoryFailed();
+    }
+
+    // Presenter to
+    interface CodeTreePresenter extends BaseListPresenter {
+        void getCodeTree();
+    }
+
+    interface CodeTreeView extends BaseListView<CodeTreePresenter, File> {
+        void onGetCodeTreeSuccess();
+    }
+}

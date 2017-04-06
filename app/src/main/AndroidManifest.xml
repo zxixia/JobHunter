@@ -25,6 +25,9 @@
         <activity android:name=".module.git.projectdetail.ProjectDetailActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".module.git.project_detail.ProjectDetailActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
