@@ -30,7 +30,10 @@ public class ProjectDetailCodeTreeFragment extends BaseRecyclerFragment<ProjectD
     }
 
     @Override
-    protected void onItemClick(File o, int position) {
-
+    protected void onItemClick(File file, int position) {
+        if (!file.getType().equals("file")) {
+            final String path = file.getPath();
+            mPresenter.getCodeTree(path);
+        }
     }
 }

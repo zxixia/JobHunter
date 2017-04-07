@@ -29,6 +29,8 @@ public class ProjectDetailActivity extends BaseBackActivity implements ProjectDe
     EmptyLayout mEmptyLayout;
 
     private ProjectDetailContract.BasicInfoPresenter mPresenter;
+    // 用于响应处理back事件
+    private ProjectDetailContract.CodeTreePresenter mCodeTreePresenter;
 
     @Override
     protected int getContentView() {
@@ -62,7 +64,7 @@ public class ProjectDetailActivity extends BaseBackActivity implements ProjectDe
         // 准备加载工程的文件
         ProjectDetailCodeTreeFragment fragment =  ProjectDetailCodeTreeFragment.newInstance();
         addFragment(R.id.fl_content, fragment);
-        ProjectDetailCodeTreePresenter presenter = new ProjectDetailCodeTreePresenter(fragment, repository);
+        mCodeTreePresenter = new ProjectDetailCodeTreePresenter(fragment, repository);
     }
 
     @Override
@@ -75,4 +77,13 @@ public class ProjectDetailActivity extends BaseBackActivity implements ProjectDe
 
     @Override
     public void showNetworkError(int strId) {}
+
+    @Override
+    public void onBackPressed() {
+        if (mCodeTreePresenter.canBack()) {
+            mCodeTreePresenter.onBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

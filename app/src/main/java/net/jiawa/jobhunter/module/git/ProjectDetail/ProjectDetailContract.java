@@ -25,6 +25,11 @@ public interface ProjectDetailContract {
     // Presenter to
     interface CodeTreePresenter extends BaseListPresenter {
         void getCodeTree(String path);
+        // 能否响应back键事件
+        boolean canBack();
+        // 响应back事件,
+        // 回退到上一级目录
+        void onBack();
     }
 
     interface CodeTreeView extends BaseListView<CodeTreePresenter, File> {
