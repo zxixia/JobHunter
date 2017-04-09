@@ -6,6 +6,7 @@ import net.jiawa.jobhunter.base.adapter.BaseRecyclerAdapter;
 import net.jiawa.jobhunter.base.fragments.BaseRecyclerFragment;
 import net.jiawa.jobhunter.bean.git.projectdetail.File;
 import net.jiawa.jobhunter.module.git.projectdetail.ProjectDetailContract.CodeTreeView;
+import net.jiawa.jobhunter.utils.CodeFileUtil;
 
 /**
  * Created by zhaoxin5 on 2017/4/6.
@@ -36,6 +37,12 @@ public class ProjectDetailCodeTreeFragment extends BaseRecyclerFragment<ProjectD
             // 显示google的下拉刷新控件
             mRefreshLayout.setRefreshing(true);
             mPresenter.getCodeTree(path);
+        } else {
+            // 文件
+            if (CodeFileUtil.isCodeTextFile(file.getName())) {
+                // 代码文件
+
+            }
         }
     }
 }

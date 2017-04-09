@@ -1,6 +1,7 @@
 package net.jiawa.jobhunter.bean.git.projectdetail;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 /**
  * Auto-generated: 2017-03-25 20:42:58
@@ -8,7 +9,7 @@ import java.util.Date;
  * @author www.jsons.cn 
  * @website http://www.jsons.cn/json2java/ 
  */
-public class Repository {
+public class Repository implements Serializable {
 
     private int id;
     private String name;
