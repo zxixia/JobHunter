@@ -26,11 +26,19 @@ public class ProjectDetailBasicInfoPresenter implements ProjectDetailContract.Ba
         GitHubAPI.getRepository(owner, repoName, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                for (int i=0; i<headers.length; i++) {
+                    XLog.d(true, 3, headers[i] + "");
+                }
                 mBasicInfoView.onGetRepositoryFailed();
+                XLog.d(true, 3, responseString);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                for (int i=0; i<headers.length; i++) {
+                    XLog.d(true, 3, headers[i] + "");
+                }
+
                 Repository bean = new Gson().fromJson(responseString, Repository.class);
                 if (null != bean) {
                     XLog.d(true, 1, "private: " + bean.getPrivate() + ", " + bean.getId());

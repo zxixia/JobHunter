@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.TextHttpResponseHandler;
 
+import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.bean.git.projectdetail.File;
 import net.jiawa.jobhunter.bean.git.projectdetail.Repository;
 import net.jiawa.jobhunter.module.git.GitHubAPI;
@@ -36,6 +37,9 @@ public class ProjectDetailCodeTreePresenter implements ProjectDetailContract.Cod
         this.mView = view;
         this.mRepository = repository;
         mView.setPresenter(this);
+        // 清空缓存的目录信息
+        mPaths.clear();
+        mFileMap.clear();
     }
 
     private String getKey(final String path) {
@@ -66,11 +70,21 @@ public class ProjectDetailCodeTreePresenter implements ProjectDetailContract.Cod
         GitHubAPI.getContents(mRepository.getContentsUrl(), path, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-
+                for (int i=0; i<headers.length; i++) {
+                    XLog.d(true, 3, headers[i] + "");
+                }
+                // 失败处理
+                // 隐藏google下拉刷新控件
+                mView.onComplete();
+                XLog.d(true, 3, responseString);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                for (int i=0; i<headers.length; i++) {
+                    XLog.d(true, 3, headers[i] + "");
+                }
+
                 Type listType = new TypeToken<List<File>>(){}.getType();
                 List<File> files = new Gson().fromJson(responseString, listType);
                 // 缓存这个目录
@@ -90,7 +104,7 @@ public class ProjectDetailCodeTreePresenter implements ProjectDetailContract.Cod
         // 如果mPaths的长度只有1
         // 表明只有0位置放了一个根目录
         // 此时不可回退
-        return mPaths.size() > 0;
+        return mPaths.size() > 1;
     }
 
     @Override

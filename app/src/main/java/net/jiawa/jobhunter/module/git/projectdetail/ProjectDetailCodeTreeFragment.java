@@ -33,6 +33,8 @@ public class ProjectDetailCodeTreeFragment extends BaseRecyclerFragment<ProjectD
     protected void onItemClick(File file, int position) {
         if (!file.getType().equals("file")) {
             final String path = file.getPath();
+            // 显示google的下拉刷新控件
+            mRefreshLayout.setRefreshing(true);
             mPresenter.getCodeTree(path);
         }
     }

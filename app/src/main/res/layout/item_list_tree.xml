@@ -34,5 +34,6 @@
     </LinearLayout>
 
     <View style="@style/sty_horizontal_line"
-        android:layout_marginLeft="16dp"/>
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
 </LinearLayout>

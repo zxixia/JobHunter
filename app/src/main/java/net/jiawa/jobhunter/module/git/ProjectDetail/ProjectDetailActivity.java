@@ -43,6 +43,15 @@ public class ProjectDetailActivity extends BaseBackActivity implements ProjectDe
         mEmptyLayout.updateStatus(EmptyLayout.STATUS.START, "拼命加载中...");
         mPresenter = new ProjectDetailBasicInfoPresenter(this);
         mPresenter.getRepository("zxixia", "JobHunter");
+
+        // 当出错的时候，响应用户点击事件
+        mEmptyLayout.setOnErrorListener(new EmptyLayout.onErrorListener() {
+            @Override
+            public void onError() {
+                mEmptyLayout.updateStatus(EmptyLayout.STATUS.START, "拼命加载中...");
+                mPresenter.getRepository("zxixia", "JobHunter");
+            }
+        });
     }
 
     @Override

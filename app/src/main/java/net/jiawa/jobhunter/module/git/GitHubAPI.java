@@ -6,6 +6,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import net.jiawa.debughelper.XLog;
+import net.jiawa.jobhunter.utils.EncodingUtils;
 
 /**
  * Created by lenovo on 2017/3/25.
@@ -154,11 +155,49 @@ import net.jiawa.debughelper.XLog;
  */
 public class GitHubAPI {
     private static AsyncHttpClient mClient = new AsyncHttpClient();
+    static String userName = "testApiGH";
+    static String password = "a123456";
 
     static {
         // 必须要设置这个,否则会报错，见
         // https://developer.github.com/v3/#user-agent-required
-        mClient.setUserAgent("zxixia");
+        mClient.setUserAgent(userName);
+
+        /*
+         * 如果不设置这个参数,
+         * 则github的请求会有次数限制,
+         * 如下是60次
+         *
+            [Server: GitHub.com]
+            [Date: Sun, 09 Apr 2017 09:08:16 GMT]
+            [Content-Type: application/json; charset=utf-8]
+            [Transfer-Encoding: chunked]
+            [Status: 403 Forbidden]
+            [X-RateLimit-Limit: 60]
+            [X-RateLimit-Remaining: 0]
+            [X-RateLimit-Reset: 1491730599]
+            [X-GitHub-Media-Type: github.v3; format=json]
+        *
+        * 参考网址：
+        * http://stackoverflow.com/questions/41168821/basic-authentication-in-android-using-volley-for-github-getting-error-code-422
+        * 添加完头部后,
+        * 目前的返回头部是5000次的限制
+        *
+            [Server: GitHub.com]
+            [Date: Sun, 09 Apr 2017 09:09:10 GMT]
+            [Content-Type: application/json; charset=utf-8]
+            [Transfer-Encoding: chunked]
+            [Status: 200 OK]
+            [X-RateLimit-Limit: 5000]
+            [X-RateLimit-Remaining: 4979]
+            [X-RateLimit-Reset: 1491732046]
+            [Cache-Control: private, max-age=60, s-maxage=60]
+            [Vary: Accept, Authorization, Cookie, X-GitHub-OTP]
+            [ETag: W/"65b9d583984d6c3b2bf75ceaccdd8bd6"]
+            [Last-Modified: Sat, 08 Apr 2017 11:25:59 GMT]
+            [X-GitHub-Media-Type: github.v3; format=json]
+        */
+        mClient.addHeader("Authorization", "Basic " + EncodingUtils.toBase64(userName + ":" + password));
         mClient.setURLEncodingEnabled(false);
     }
 
