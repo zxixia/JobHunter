@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.module.git.ProjectDetail2;
+package net.jiawa.jobhunter.module.git.projectdetail;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.TextHttpResponseHandler;
