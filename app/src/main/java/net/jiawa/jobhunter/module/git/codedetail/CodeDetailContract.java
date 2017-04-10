@@ -21,6 +21,6 @@ public class CodeDetailContract {
     }
 
     interface Presenter extends BasePresenter {
-        void getCode();
+        void getCode(String path);
     }
 }

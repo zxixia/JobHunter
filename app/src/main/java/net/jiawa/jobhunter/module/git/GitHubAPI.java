@@ -232,4 +232,9 @@ public class GitHubAPI {
         XLog.d(true, 1, getStr);
         mClient.get(getStr, handler);
     }
+
+    public static void getCode(String contents_url, String path, TextHttpResponseHandler handler) {
+        // 其实调用的和getContents类似
+        getContents(contents_url, path, handler);
+    }
 }

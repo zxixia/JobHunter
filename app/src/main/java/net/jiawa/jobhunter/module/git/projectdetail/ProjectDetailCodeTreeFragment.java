@@ -5,6 +5,8 @@ import android.view.View;
 import net.jiawa.jobhunter.base.adapter.BaseRecyclerAdapter;
 import net.jiawa.jobhunter.base.fragments.BaseRecyclerFragment;
 import net.jiawa.jobhunter.bean.git.projectdetail.File;
+import net.jiawa.jobhunter.bean.git.projectdetail.Repository;
+import net.jiawa.jobhunter.module.git.codedetail.CodeDetailActivity;
 import net.jiawa.jobhunter.module.git.projectdetail.ProjectDetailContract.CodeTreeView;
 import net.jiawa.jobhunter.utils.CodeFileUtil;
 
@@ -41,7 +43,10 @@ public class ProjectDetailCodeTreeFragment extends BaseRecyclerFragment<ProjectD
             // 文件
             if (CodeFileUtil.isCodeTextFile(file.getName())) {
                 // 代码文件
-
+                CodeDetailActivity.show(getContext(),
+                        (Repository) getArguments().getSerializable("repository"),
+                        file.getPath(),
+                        file.getName());
             }
         }
     }

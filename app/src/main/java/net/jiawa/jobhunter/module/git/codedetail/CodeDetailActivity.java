@@ -19,17 +19,20 @@ public class CodeDetailActivity extends BaseBackActivity implements CodeDetailCo
     @Bind(R.id.el_codedetail_loading)
     EmptyLayout mLoading;
 
+    Repository mRepository;
+    CodeDetailContract.Presenter mPresenter;
+
     @Override
     protected int getContentView() {
         return R.layout.activity_code_detail;
     }
 
     // 提供给外界直接调用的静态方法
-    public static void show(Context context, Repository repository, String path, String branch) {
+    public static void show(Context context, Repository repository, String path, String fileName) {
         Intent intent = new Intent(context, CodeDetailActivity.class);
         // Log.e("path", path);
         intent.putExtra("path", path);
-        intent.putExtra("branch", branch);
+        intent.putExtra("fileName", fileName);
         intent.putExtra("repository", repository);
         context.startActivity(intent);
     }
@@ -39,7 +42,15 @@ public class CodeDetailActivity extends BaseBackActivity implements CodeDetailCo
     protected void initWidget() {
         super.initWidget();
         Intent intent = getIntent();
+        String path = intent.getStringExtra("path");
+        String fileName = intent.getStringExtra("fileName");
+        mRepository = (Repository) intent.getSerializableExtra("repository");
 
+        CodeDetailFragment fragment = CodeDetailFragment.newInstance(fileName, path);
+        addFragment(R.id.fl_content, fragment);
+        CodeDetailContract.Presenter presenter = new CodeDetailPresenter(this, fragment, mRepository);
+
+        mLoading.updateStatus(EmptyLayout.STATUS.START, "加载中...");
     }
 
     @Override
@@ -53,7 +64,9 @@ public class CodeDetailActivity extends BaseBackActivity implements CodeDetailCo
     }
 
     @Override
-    public void setPresenter(CodeDetailContract.Presenter presenter) {}
+    public void setPresenter(CodeDetailContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
 
     @Override
     public void showNetworkError(int strId) {}

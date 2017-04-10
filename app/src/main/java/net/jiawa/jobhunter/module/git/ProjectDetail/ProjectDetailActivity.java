@@ -1,5 +1,6 @@
 package net.jiawa.jobhunter.module.git.projectdetail;
 
+import android.os.Bundle;
 import android.widget.TextView;
 
 import net.jiawa.jobhunter.R;
@@ -72,6 +73,9 @@ public class ProjectDetailActivity extends BaseBackActivity implements ProjectDe
 
         // 准备加载工程的文件
         ProjectDetailCodeTreeFragment fragment =  ProjectDetailCodeTreeFragment.newInstance();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("repository", repository);
+        fragment.setArguments(bundle);
         addFragment(R.id.fl_content, fragment);
         mCodeTreePresenter = new ProjectDetailCodeTreePresenter(fragment, repository);
     }

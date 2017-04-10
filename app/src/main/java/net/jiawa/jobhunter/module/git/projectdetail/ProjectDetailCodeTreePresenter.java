@@ -71,18 +71,18 @@ public class ProjectDetailCodeTreePresenter implements ProjectDetailContract.Cod
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 for (int i=0; i<headers.length; i++) {
-                    XLog.d(true, 3, headers[i] + "");
+                    XLog.d(false, 3, headers[i] + "");
                 }
                 // 失败处理
                 // 隐藏google下拉刷新控件
                 mView.onComplete();
-                XLog.d(true, 3, responseString);
+                XLog.d(false, 3, responseString);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 for (int i=0; i<headers.length; i++) {
-                    XLog.d(true, 3, headers[i] + "");
+                    XLog.d(false, 3, headers[i] + "");
                 }
 
                 Type listType = new TypeToken<List<File>>(){}.getType();

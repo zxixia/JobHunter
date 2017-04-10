@@ -27,16 +27,16 @@ public class ProjectDetailBasicInfoPresenter implements ProjectDetailContract.Ba
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 for (int i=0; i<headers.length; i++) {
-                    XLog.d(true, 3, headers[i] + "");
+                    XLog.d(false, 3, headers[i] + "");
                 }
                 mBasicInfoView.onGetRepositoryFailed();
-                XLog.d(true, 3, responseString);
+                XLog.d(false, 3, responseString);
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 for (int i=0; i<headers.length; i++) {
-                    XLog.d(true, 3, headers[i] + "");
+                    XLog.d(false, 3, headers[i] + "");
                 }
 
                 Repository bean = new Gson().fromJson(responseString, Repository.class);
