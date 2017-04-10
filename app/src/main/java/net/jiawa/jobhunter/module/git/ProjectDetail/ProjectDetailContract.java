@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.module.git.projectdetail;
+package net.jiawa.jobhunter.module.git.ProjectDetail;
 
 import net.jiawa.jobhunter.base.mvp.presenter.BaseListPresenter;
 import net.jiawa.jobhunter.base.mvp.presenter.BasePresenter;

@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".module.git.projectdetail.ProjectDetailActivity"
+        <activity android:name=".module.git.ProjectDetail.ProjectDetailActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".module.git.codedetail.CodeDetailActivity"

@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.module.git.projectdetail;
+package net.jiawa.jobhunter.module.git.ProjectDetail;
 
 import android.view.View;
 
@@ -7,7 +7,7 @@ import net.jiawa.jobhunter.base.fragments.BaseRecyclerFragment;
 import net.jiawa.jobhunter.bean.git.projectdetail.File;
 import net.jiawa.jobhunter.bean.git.projectdetail.Repository;
 import net.jiawa.jobhunter.module.git.codedetail.CodeDetailActivity;
-import net.jiawa.jobhunter.module.git.projectdetail.ProjectDetailContract.CodeTreeView;
+import net.jiawa.jobhunter.module.git.ProjectDetail.ProjectDetailContract.CodeTreeView;
 import net.jiawa.jobhunter.utils.CodeFileUtil;
 
 /**

@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.module.git.projectdetail;
+package net.jiawa.jobhunter.module.git.ProjectDetail;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
