@@ -196,7 +196,7 @@ public class SourceEditor {
             content = "";
         boolean encoded = !TextUtils.isEmpty(content)
                 && "base64".equals(code.getEncoding());
-        return setSource(name, content.replace("\n", ""), encoded);
+        return setSource(name, content/*.replace("\n", "")*/, encoded);
     }
 
     /**
