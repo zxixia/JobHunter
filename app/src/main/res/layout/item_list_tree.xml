@@ -14,7 +14,8 @@
         android:paddingBottom="@dimen/lay_12"
         android:paddingLeft="@dimen/lay_16"
         android:paddingRight="@dimen/lay_16"
-        android:paddingTop="@dimen/lay_12">
+        android:paddingTop="@dimen/lay_12"
+        android:background="@drawable/ic_material">
 
         <ImageView
             android:id="@+id/iv_tree_type"
