@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.module.git.ProjectDetail;
+package net.jiawa.jobhunter.module.git.ProjectDetail2;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

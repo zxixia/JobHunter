@@ -9,7 +9,7 @@ import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.fragments.BaseFragment;
 import net.jiawa.jobhunter.helper.AnimatorListenerHelper;
-import net.jiawa.jobhunter.module.git.ProjectDetail.ProjectDetailActivity;
+import net.jiawa.jobhunter.module.git.ProjectDetail2.ProjectDetailActivity;
 import net.jiawa.jobhunter.widgets.NavigationButton;
 
 import butterknife.Bind;

@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.module.git.ProjectDetail;
+package net.jiawa.jobhunter.module.git.ProjectDetail2;
 
 import android.os.Bundle;
 import android.widget.TextView;
