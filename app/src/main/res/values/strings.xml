@@ -8,4 +8,6 @@
     <string name="state_refreshing">正在刷新</string>
     <string name="state_loading_error">数据加载中&#8230;</string>
     <string name="state_submit">正在提交中&#8230;</string>
+
+    <string name="main_tab_title">主页</string>
 </resources>

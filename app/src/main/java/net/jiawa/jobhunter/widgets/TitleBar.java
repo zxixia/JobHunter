@@ -79,6 +79,8 @@ public class TitleBar extends FrameLayout {
         setBackgroundColor(getResources().getColor(R.color.jiawa_main));
 
         // Init padding
+        // 这里设置topPadding
+        // 让当前的title文字空出上方的statusbar的高度
         setPadding(getLeft(), getTop() + UiUtil.getStatusBarHeight(getContext()), getRight(), getBottom());
     }
 

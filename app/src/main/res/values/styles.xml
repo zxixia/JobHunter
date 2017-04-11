@@ -22,9 +22,13 @@
         <item name="android:background">@color/gray_c8c7cc</item>
     </style>
 
-
-
     <style name="Base.App.Theme.NoTitle" parent="App.Theme.Light">
+
+        <!--color primary-->
+        <item name="colorPrimary">@color/jiawa_main</item>
+        <item name="colorPrimaryDark">@color/jiawa_main</item>
+        <item name="colorAccent">@color/jiawa_main</item>
+
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

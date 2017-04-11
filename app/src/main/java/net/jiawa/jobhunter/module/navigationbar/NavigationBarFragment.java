@@ -2,6 +2,10 @@ package net.jiawa.jobhunter.module.navigationbar;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
+import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
@@ -10,7 +14,10 @@ import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.fragments.BaseFragment;
 import net.jiawa.jobhunter.helper.AnimatorListenerHelper;
 import net.jiawa.jobhunter.module.git.projectdetail.ProjectDetailActivity;
+import net.jiawa.jobhunter.module.main.MainTabFragment;
 import net.jiawa.jobhunter.widgets.NavigationButton;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -31,6 +38,11 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
     public NavigationButton mItemAbout;
 
     private NavigationButton mCurrentNavButton = null;
+    private FragmentManager mFragmentManager;
+    private Context mContext;
+    // 这个是MainActivity的布局中居中的那个布局,
+    // 用于存放MainTabFragment这样的fragment
+    private int mContainerId;
 
     @Override
     protected int getLayoutId() {
@@ -43,12 +55,22 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
         super.initWidget(root);
         XLog.d(false, 1);
 
-        mItemJob.init(R.drawable.tab_icon_explore);
-        mItemCoder.init(R.drawable.tab_icon_tweet);
-        mItemNews.init(R.drawable.tab_icon_new);
-        mItemAbout.init(R.drawable.tab_icon_me);
+        mItemJob.init(R.drawable.tab_icon_explore,
+                MainTabFragment.class);
+        mItemCoder.init(R.drawable.tab_icon_tweet,
+                MainTabFragment.class);
+        mItemNews.init(R.drawable.tab_icon_new,
+                MainTabFragment.class);
+        mItemAbout.init(R.drawable.tab_icon_me,
+                MainTabFragment.class);
+    }
 
-        // set default select item
+    public void setup(Context context, FragmentManager manager, int containerId) {
+        mContext = context;
+        mFragmentManager = manager;
+        mContainerId = containerId;
+
+        clearOldFragment();
         doSelect(mItemJob);
     }
 
@@ -74,6 +96,28 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
         if (newNavButton.getId() == R.id.tv_navigationbar_item_about) {
             startActivity(ProjectDetailActivity.class);
         }
+
+        if (newNavButton.getId() != R.id.tv_navigationbar_item_job) {
+            return;
+        }
+        XLog.d(true, 1);
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        if (oldNavButton != null) {
+            if (oldNavButton.getFragment() != null) {
+                ft.detach(oldNavButton.getFragment());
+            }
+        }
+        if (newNavButton != null) {
+            if (newNavButton.getFragment() == null) {
+                Fragment fragment = Fragment.instantiate(mContext,
+                        newNavButton.getClx().getName(), null);
+                ft.add(mContainerId, fragment, newNavButton.getTag());
+                newNavButton.setFragment(fragment);
+            } else {
+                ft.attach(newNavButton.getFragment());
+            }
+        }
+        ft.commit();
     }
 
     private void doSelect(NavigationButton newNavButton) {
@@ -94,6 +138,23 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
         doTabChanged(oldNavButton, newNavButton);
         mCurrentNavButton = newNavButton;
         doSelectAnimate();
+    }
+
+    @SuppressWarnings("RestrictedApi")
+    private void clearOldFragment() {
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        List<Fragment> fragments = mFragmentManager.getFragments();
+        if (transaction == null || fragments == null || fragments.size() == 0)
+            return;
+        boolean doCommit = false;
+        for (Fragment fragment : fragments) {
+            if (fragment != this) {
+                transaction.remove(fragment);
+                doCommit = true;
+            }
+        }
+        if (doCommit)
+            transaction.commitNow();
     }
 
     private void updateAnimating(boolean animating) {
