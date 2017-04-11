@@ -49,12 +49,16 @@
             这是上方Tab和面的那个按钮
             点击以后可供用户选择不同的栏目
             -->
-            <TextView
-                android:layout_width="30dp"
+            <ImageView
+                android:id="@+id/iv_arrow_down"
+                android:layout_width="40dp"
                 android:layout_height="match_parent"
-                android:text="+"
-                android:textSize="16sp"
-                android:id="@+id/tv_main_add"/>
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:src="@mipmap/ic_subscribe"
+                android:contentDescription="@null"/>
         </LinearLayout>
         <!--
         下面的不同栏目

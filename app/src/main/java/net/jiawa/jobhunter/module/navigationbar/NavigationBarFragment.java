@@ -121,7 +121,7 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
     }
 
     private void doSelect(NavigationButton newNavButton) {
-        if (null != mAnimatorSet && isAnimating) {
+        if (null != mAnimatorSet && mAnimatorSet.isRunning()) {
             XLog.d(false, 2);
             return;
         }
@@ -157,39 +157,6 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
             transaction.commitNow();
     }
 
-    private void updateAnimating(boolean animating) {
-        synchronized (mAnimatingObject) {
-            isAnimating = animating;
-        }
-    }
-    private boolean isAnimating = false;
-    private Object mAnimatingObject = new Object();
-    private AnimatorListenerHelper mAnimatorListenerHelper = new AnimatorListenerHelper() {
-        @Override
-        public void onAnimationCancel(Animator animation) {
-            super.onAnimationCancel(animation);
-            updateAnimating(false);
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            super.onAnimationEnd(animation);
-            updateAnimating(false);
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-            super.onAnimationRepeat(animation);
-            updateAnimating(true);
-        }
-
-        @Override
-        public void onAnimationStart(Animator animation) {
-            super.onAnimationStart(animation);
-            updateAnimating(true);
-        }
-    };
-
     private AnimatorSet mAnimatorSet = new AnimatorSet();
     /***
      * 底部导航切换以后的动画,动画示意:
@@ -212,7 +179,7 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
          * 每次都需要new一个AnimatorSet,否则动画会有卡顿
          */
         mAnimatorSet = new AnimatorSet();
-        mAnimatorSet.addListener(mAnimatorListenerHelper);
+        // mAnimatorSet.addListener(mAnimatorListenerHelper);
 
         for (int i=0; i<getChildCount(); i++) {
             // if (i == currentIndex) continue;
@@ -231,7 +198,7 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
          * 每次都需要new一个AnimatorSet,否则动画会有卡顿
          */
         mAnimatorSet = new AnimatorSet();
-        mAnimatorSet.addListener(mAnimatorListenerHelper);
+        // mAnimatorSet.addListener(mAnimatorListenerHelper);
         mAnimatorSet.play(getNavigationItemClickAnimator(0, mCurrentNavButton, 100));
         mAnimatorSet.start();
     }
