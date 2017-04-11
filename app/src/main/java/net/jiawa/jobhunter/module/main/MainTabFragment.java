@@ -43,12 +43,12 @@ public class MainTabFragment extends BaseTitleFragment implements View.OnClickLi
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        mTabLayout.addTab(mTabLayout.newTab().setText("电影"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("天气"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("豆瓣电影"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("全国天气"));
         mTabLayout.addTab(mTabLayout.newTab().setText("精品图文"));
         mTabLayout.addTab(mTabLayout.newTab().setText("每日一乐"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("段子"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("内涵"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("精选段子"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("搞笑内涵"));
 
         mTabAdd.setOnClickListener(this);
     }
@@ -58,10 +58,10 @@ public class MainTabFragment extends BaseTitleFragment implements View.OnClickLi
         if (null == view) return null;
         final ValueAnimator anim = new ValueAnimator();
         final float startDegree = view.getRotation();
-        final float endDegree = open ? startDegree + 360+45 : startDegree -360-45;
+        final float endDegree = open ? startDegree + 90+45 : startDegree -90-45;
         // 生成旋转角度
         anim.setFloatValues(startDegree, endDegree);
-        anim.setDuration(700);
+        anim.setDuration(200);
         anim.setInterpolator(new DecelerateInterpolator());
 
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

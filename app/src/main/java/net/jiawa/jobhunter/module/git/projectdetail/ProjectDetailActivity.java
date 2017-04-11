@@ -93,7 +93,7 @@ public class ProjectDetailActivity extends BaseBackActivity implements ProjectDe
 
     @Override
     public void onBackPressed() {
-        if (mCodeTreePresenter.canBack()) {
+        if (null != mCodeTreePresenter && mCodeTreePresenter.canBack()) {
             mCodeTreePresenter.onBack();
         } else {
             super.onBackPressed();
