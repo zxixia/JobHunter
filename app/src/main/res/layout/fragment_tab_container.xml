@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+管理容纳不同的Tab内容的页面
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <android.support.design.widget.TabLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/tb_main"
+            />
+        <!--
+        这是上方Tab和面的那个按钮
+        点击以后可供用户选择不同的栏目
+        -->
+        <TextView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:text="+"
+            android:textSize="16sp"
+            android:id="@+id/tv_main_add"/>
+    </LinearLayout>
+    <!--
+    这里要预留一个作为全局的提示的View
+    -->
+</FrameLayout>
