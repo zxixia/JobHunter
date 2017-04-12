@@ -81,7 +81,7 @@ public class TitleBar extends FrameLayout {
         // Init padding
         // 这里设置topPadding
         // 让当前的title文字空出上方的statusbar的高度
-        setPadding(getLeft(), getTop() + UiUtil.getStatusBarHeight(getContext()), getRight(), getBottom());
+        // setPadding(getLeft(), getTop() + UiUtil.getStatusBarHeight(getContext()), getRight(), getBottom());
     }
 
     public void setTitle(@StringRes int titleRes) {
@@ -106,7 +106,7 @@ public class TitleBar extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         float d = getResources().getDisplayMetrics().density;
-        int minH = (int) (d * 36 + UiUtil.getStatusBarHeight(getContext()));
+        int minH = (int) (d * 36 /*+ UiUtil.getStatusBarHeight(getContext())*/);
 
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(minH, MeasureSpec.EXACTLY);
 

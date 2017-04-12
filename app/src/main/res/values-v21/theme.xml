@@ -4,4 +4,10 @@
     <style name="App.Theme.Light" parent="Base.App.Theme.Light">
         <item name="android:elevation">0dp</item>
     </style>
+
+    <!-- MainActivity的主题样式 -->
+    <style name="App.Theme.Main" parent="Base.App.Theme.NoTitle">
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
 </resources>
