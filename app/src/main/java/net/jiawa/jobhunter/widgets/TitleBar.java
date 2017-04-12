@@ -106,7 +106,8 @@ public class TitleBar extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         float d = getResources().getDisplayMetrics().density;
-        int minH = (int) (d * 36 /*+ UiUtil.getStatusBarHeight(getContext())*/);
+        // 48dp是ActionBar的最小高度
+        int minH = (int) (d * 48 /*+ UiUtil.getStatusBarHeight(getContext())*/);
 
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(minH, MeasureSpec.EXACTLY);
 
