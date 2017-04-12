@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 这是默认的Activity的主题样式 -->
+    <style name="App.Theme.Light" parent="Base.App.Theme.Light">
+        <item name="android:elevation">0dp</item>
+    </style>
+</resources>
