@@ -16,7 +16,7 @@
             <TextView
                 android:id="@+id/tv_projectdetail_name"
                 android:layout_width="match_parent"
-                android:layout_height="50px"
+                android:layout_height="wrap_content"
                 android:text="作者/项目名"
                 android:textSize="20dp"
                 android:layout_marginLeft="15dp"/>

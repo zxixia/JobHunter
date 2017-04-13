@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.utils.TDevice;
-import net.jiawa.jobhunter.utils.UiUtil;
 
 /**
  * Created by JuQiu
