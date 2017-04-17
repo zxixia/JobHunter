@@ -30,6 +30,9 @@
         <activity android:name=".module.git.codedetail.CodeDetailActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".module.douban.DouBanTheaterActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
