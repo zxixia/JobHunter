@@ -27,7 +27,7 @@ public class Subjects implements Serializable {
     private String originalTitle;
     private String subtype;
     private List<Directors> directors;
-    private List<Date> pubdates;
+    private List<String> pubdates;
     private String year;
     private Images images;
     private String alt;
@@ -109,10 +109,10 @@ public class Subjects implements Serializable {
          return directors;
      }
 
-    public void setPubdates(List<Date> pubdates) {
+    public void setPubdates(List<String> pubdates) {
          this.pubdates = pubdates;
      }
-     public List<Date> getPubdates() {
+     public List<String> getPubdates() {
          return pubdates;
      }
 

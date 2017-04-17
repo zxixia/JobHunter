@@ -33,7 +33,7 @@ public class DouBanTheaterActivity extends BaseBackActivity {
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 XLog.d(true, 1, Arrays.toString(headers));
                 Theaters theaters = new Gson().fromJson(responseString, Theaters.class);
-                for (int i=0; i< theaters.getCount(); i++) {
+                for (int i=0; i< theaters.getSubjects().size(); i++) {
                     XLog.d(true, 1, theaters.getCount() + ", " + theaters.getSubjects().get(i).getTitle());
                 }
             }
