@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/jiawa_main">
-
-    <!-- 展示豆瓣电影院正在上映的 -->
-</LinearLayout>
+    android:background="@color/white">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fl_content"/>
+    <net.jiawa.jobhunter.widgets.EmptyLayout
+        android:id="@+id/el_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+    </net.jiawa.jobhunter.widgets.EmptyLayout>
+</FrameLayout>

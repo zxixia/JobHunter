@@ -1,7 +1,9 @@
 package net.jiawa.jobhunter.module.douban.Theater;
 
+import com.google.gson.Gson;
 import com.loopj.android.http.TextHttpResponseHandler;
 
+import net.jiawa.jobhunter.bean.douban.Theaters;
 import net.jiawa.jobhunter.module.douban.DouBanAPI;
 
 import cz.msebera.android.httpclient.Header;
@@ -32,14 +34,20 @@ public class TheaterPresenter implements TheaterContract.TheaterPresenter {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                mEmptyView.onGetTheatersSuccess();;
-                mView.onComplete();
+                mEmptyView.onGetTheatersSuccess();
+                Theaters theaters = new Gson().fromJson(responseString, Theaters.class);
+                if (null != theaters.getSubjects()) {
+                    mView.onRefreshSuccess(theaters.getSubjects());
+                    mView.onComplete();
+                }
             }
         });
     }
 
     @Override
-    public void onRefreshing() {}
+    public void onRefreshing() {
+        getTheaters();
+    }
 
     @Override
     public void onLoadMore() {}
