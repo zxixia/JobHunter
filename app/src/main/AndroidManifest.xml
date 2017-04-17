@@ -30,7 +30,7 @@
         <activity android:name=".module.git.codedetail.CodeDetailActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".module.douban.DouBanTheaterActivity"
+        <activity android:name=".module.douban.Theater.TheaterActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>

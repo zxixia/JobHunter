@@ -13,7 +13,7 @@ import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.fragments.BaseFragment;
 import net.jiawa.jobhunter.helper.AnimatorListenerHelper;
-import net.jiawa.jobhunter.module.douban.DouBanTheaterActivity;
+import net.jiawa.jobhunter.module.douban.Theater.TheaterActivity;
 import net.jiawa.jobhunter.module.git.projectdetail.ProjectDetailActivity;
 import net.jiawa.jobhunter.module.main.MainTabFragment;
 import net.jiawa.jobhunter.widgets.NavigationButton;
@@ -99,7 +99,7 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
         }
 
         if (newNavButton.getId() == R.id.tv_navigationbar_item_news) {
-            startActivity(DouBanTheaterActivity.class);
+            startActivity(TheaterActivity.class);
         }
 
         if (newNavButton.getId() != R.id.tv_navigationbar_item_job) {
