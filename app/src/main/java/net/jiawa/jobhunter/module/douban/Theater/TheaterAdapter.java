@@ -10,6 +10,7 @@ import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.adapter.BaseGeneralRecyclerAdapter;
 import net.jiawa.jobhunter.base.adapter.BaseRecyclerAdapter;
 import net.jiawa.jobhunter.bean.douban.Subjects;
+import net.jiawa.jobhunter.widgets.MovieStarView;
 
 /**
  * Created by zhaoxin5 on 2017/4/17.
@@ -37,19 +38,22 @@ public class TheaterAdapter extends BaseGeneralRecyclerAdapter<Subjects> {
                 .placeholder(R.mipmap.ic_launcher)
                 .into(h.mPoster);
         h.mTextName.setText(subjects.getTitle());
-        h.mRating.setText(subjects.getRating().getStars());
+        h.mRating.setText(String.valueOf(subjects.getRating().getAverage()));
+        h.mMovieStarView.setStars(Integer.valueOf(subjects.getRating().getStars()));
     }
 
     private static class TheaterViewHolder extends RecyclerView.ViewHolder {
         ImageView mPoster;
         TextView mTextName;
         TextView mRating;
+        MovieStarView mMovieStarView;
 
         TheaterViewHolder(View itemView) {
             super(itemView);
             mRating = (TextView) itemView.findViewById(R.id.tv_rating);
             mPoster = (ImageView) itemView.findViewById(R.id.iv_poster);
             mTextName = (TextView) itemView.findViewById(R.id.tv_name);
+            mMovieStarView = (MovieStarView) itemView.findViewById(R.id.ms_stars);
         }
     }
 }

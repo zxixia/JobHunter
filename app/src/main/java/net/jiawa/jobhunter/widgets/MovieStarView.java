@@ -14,6 +14,7 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.View;
 
+import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 
 /**
@@ -78,9 +79,7 @@ public class MovieStarView extends View {
         mWidth = getWidth();
         mHeight = getHeight();
 
-        mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-
+        // 单个星级的图片高度
         mStarsHeight = mStarBitmap.getHeight() / 11 + 0.5f;
 
         updateCurrentStarBitmap();
@@ -95,13 +94,68 @@ public class MovieStarView extends View {
         if (mCurrentStartBitmap == null) {
             updateCurrentStarBitmap();
         }
-        canvas.drawBitmap(mCurrentStartBitmap,0,0,null);
+        canvas.drawBitmap(mCurrentStartBitmap, 0, 0,null);
     }
 
-    private float getDy(int stars) {
-        int temp = stars/5;
-        return mStarsHeight * (10-temp) + 0.5f;
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        float d = getResources().getDisplayMetrics().density;
+        setMeasuredDimension(measureWidth(widthMeasureSpec, d),
+                measureHeight(heightMeasureSpec, d));
     }
+
+    /**
+     * Determines the width of this view
+     * @param measureSpec A measureSpec packed into an int
+     * @return The width of the view, honoring constraints from measureSpec
+     */
+    private int measureWidth(int measureSpec, float density) {
+        int result = 0;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+
+        if (specMode == MeasureSpec.EXACTLY) {
+            // We were told how big to be
+            // 这里针对的就是指定了width和height的情形了
+            result = specSize;
+        } else {
+            // 指定最小宽度
+            // 04-18 17:33:02.814 D/xixia-1 ( 9173): [1][DogFood][2       ][  124][measureWidth][net.jiawa.jobhunter.widgets.MovieStarView][density * 50: 150.0, specSize: 1080]
+            // 04-18 17:33:02.814 D/xixia-1 ( 9173): [1][DogFood][3       ][  145][measureHeight][net.jiawa.jobhunter.widgets.MovieStarView][density * 15: 45.0, specSize: 1776]
+            // 这里传的是父控件的大小
+            // 所以要取最小值
+            result = (int) Math.min(density * 40, specSize);
+        }
+        XLog.d(false, 1, "density * 50: " + density * 50 + ", specSize: " + specSize);
+        return result;
+    }
+
+    /**
+     * Determines the height of this view
+     * @param measureSpec A measureSpec packed into an int
+     * @return The height of the view, honoring constraints from measureSpec
+     */
+    private int measureHeight(int measureSpec, float density) {
+        int result = 0;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+
+        if (specMode == MeasureSpec.EXACTLY) {
+            // We were told how big to be
+            // 这里针对的就是指定了width和height的情形了
+            result = specSize;
+        } else {
+            // 指定最小高度
+            // 04-18 17:33:02.814 D/xixia-1 ( 9173): [1][DogFood][2       ][  124][measureWidth][net.jiawa.jobhunter.widgets.MovieStarView][density * 50: 150.0, specSize: 1080]
+            // 04-18 17:33:02.814 D/xixia-1 ( 9173): [1][DogFood][3       ][  145][measureHeight][net.jiawa.jobhunter.widgets.MovieStarView][density * 15: 45.0, specSize: 1776]
+            // 这里传的是父控件的大小
+            // 所以要取最小值
+            result = (int) Math.min(density * 12, specSize);
+        }
+        XLog.d(false, 1, "density * 15: " + density * 15 + ", specSize: " + specSize);
+        return result;
+    }
+
 
     /**
      * 裁剪当前显示的星星,星级的图片
@@ -110,16 +164,39 @@ public class MovieStarView extends View {
         if (mStarBitmap == null) {
             return;
         }
+
         float scaleWidth = mWidth / mStarBitmap.getWidth();
         float scaleHeight = mHeight / mStarsHeight;
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);// 使用后乘
-        mCurrentStartBitmap = Bitmap.createBitmap(mStarBitmap, 0, (int)getDy(mStars), mStarBitmap.getWidth(), (int) mStarsHeight, matrix, false);
+
+        final int x = 0;
+        final int y = (int) (mStarsHeight * (10-mStars/5) + 0.5f);
+        final int width = mStarBitmap.getWidth();
+        final int height = (int) mStarsHeight;
+
+        mCurrentStartBitmap = Bitmap.createBitmap(mStarBitmap, x, y, width, height, matrix, false);
     }
 
     public void setStars(int stars) {
         mStars = stars;
+        updateCurrentStarBitmap();
         invalidate();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        // 不能有下面的处理
+        // 否则在RecyclerView中重用的时候会报错
+        /*if (mStarBitmap != null) {
+            mStarBitmap.recycle();
+            mStarBitmap = null;
+        }
+        if (mCurrentStartBitmap != null) {
+            mCurrentStartBitmap.recycle();
+            mCurrentStartBitmap = null;
+        }*/
     }
 
     private Bitmap getBitmapFromDrawable(Drawable drawable) {
