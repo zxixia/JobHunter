@@ -6,4 +6,7 @@
         <attr name="aIcon" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="MovieStar">
+        <attr name="MovieStars" format="integer" />
+    </declare-styleable>
 </resources>
