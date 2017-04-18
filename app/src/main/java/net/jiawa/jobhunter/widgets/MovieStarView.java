@@ -124,9 +124,9 @@ public class MovieStarView extends View {
             // 04-18 17:33:02.814 D/xixia-1 ( 9173): [1][DogFood][3       ][  145][measureHeight][net.jiawa.jobhunter.widgets.MovieStarView][density * 15: 45.0, specSize: 1776]
             // 这里传的是父控件的大小
             // 所以要取最小值
-            result = (int) Math.min(density * 40, specSize);
+            result = (int) Math.min(density * 60, specSize);
         }
-        XLog.d(false, 1, "density * 50: " + density * 50 + ", specSize: " + specSize);
+        XLog.d(false, 1, "density * 60: " + density * 60 + ", specSize: " + specSize);
         return result;
     }
 

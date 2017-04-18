@@ -23,6 +23,7 @@ public class DouBanAPI {
         // String.format("https://api.douban.com/v2/movie/in_theaters", owner, repoName);
         mClient.get(getStr, handler);
 
+        // https://api.douban.com/v2/movie/in_theaters?apikey=0b2bdeda43b5688921839c8ecb20399b&city=南京&start=0&count=100&client=&udid=
         RequestParams params = new RequestParams();
         params.put("apikey", "0b2bdeda43b5688921839c8ecb20399b");
         params.put("city",   "南京");

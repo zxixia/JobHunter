@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:layout_weight="1"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/lay_16"
@@ -20,18 +20,70 @@
         <LinearLayout
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/iv_poster"
-                android:layout_width="80dp"
-                android:layout_height="160dp"
-                android:src="@mipmap/ic_launcher"
-                android:layout_gravity="center"/>
+            android:orientation="vertical"
+            android:gravity="center">
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="140dp"
+                android:layout_gravity="center">
+                <ImageView
+                    android:id="@+id/iv_poster"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/ic_launcher"/>
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- 右边的影片详细信息 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:paddingLeft="12dp"
+            android:layout_gravity="center_vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="140dp"
+                android:orientation="vertical"
+                android:layout_alignParentTop="true">
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_title_color"
+                    android:textSize="16sp"
+                    tools:text="Large Text" />
+                <TextView
+                    android:id="@+id/tv_genres"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    />
+                <TextView
+                    android:id="@+id/tv_pubdates"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    />
+                <TextView
+                    android:id="@+id/tv_directors"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    />
+                <TextView
+                    android:id="@+id/tv_casts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center_vertical|left"
+                android:layout_alignParentBottom="true">
                 <net.jiawa.jobhunter.widgets.MovieStarView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -39,22 +91,15 @@
                     app:MovieStars="15"/>
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="2dp"
+                    android:layout_marginLeft="15dp"
                     android:id="@+id/tv_rating"
-                    android:textSize="16sp"
-                    android:layout_marginLeft="5dp"
+                    android:textSize="14sp"
                     android:gravity="center"
                     android:text="9.0"/>
             </LinearLayout>
-        </LinearLayout>
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:textColor="@color/text_title_color"
-            android:textSize="16sp"
-            tools:text="Large Text" />
+        </RelativeLayout>
     </LinearLayout>
 
     <View style="@style/sty_horizontal_line"

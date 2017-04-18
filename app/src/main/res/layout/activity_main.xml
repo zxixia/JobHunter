@@ -7,14 +7,6 @@
     android:layout_height="match_parent"
     tools:context="net.jiawa.jobhunter.module.MainActivity"
     android:orientation="vertical">
-    <net.jiawa.jobhunter.widgets.MovieStarView
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        app:MovieStars="15"/>
-    <net.jiawa.jobhunter.widgets.MovieStarView
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        app:MovieStars="35"/>
     <!--
     中间进行切换显示的各个不同的fragment的容器
     -->
