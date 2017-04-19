@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="3000dp"
+    android:layout_height="match_parent"
     android:background="@color/amber_50"
-    android:id="@+id/fl_root">
-    <FrameLayout
+    android:scrollbars="vertical">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1000dp"
-        android:background="@color/amber_300">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1000dp"
+            android:id="@+id/iv_top_image"
+            android:layout_width="400dp"
+            android:layout_height="640dp"
             android:scaleType="fitXY"
-            android:id="@+id/iv_top_image"/>
-    </FrameLayout>
-</FrameLayout>
+            android:layout_gravity="center"/>
+        <ImageView
+            android:layout_width="400dp"
+            android:layout_height="640dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_launcher"/>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
