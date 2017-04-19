@@ -13,7 +13,7 @@ import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.fragments.BaseFragment;
 import net.jiawa.jobhunter.helper.AnimatorListenerHelper;
-import net.jiawa.jobhunter.module.douban.Theater.TheaterActivity;
+import net.jiawa.jobhunter.module.douban.theater.TheaterActivity;
 import net.jiawa.jobhunter.module.git.projectdetail.ProjectDetailActivity;
 import net.jiawa.jobhunter.module.main.MainTabFragment;
 import net.jiawa.jobhunter.widgets.NavigationButton;

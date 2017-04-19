@@ -80,7 +80,9 @@ public class MovieStarView extends View {
         mHeight = getHeight();
 
         // 单个星级的图片高度
-        mStarsHeight = mStarBitmap.getHeight() / 11 + 0.5f;
+        // 这样获取的高度才是最准确的
+        mStarsHeight = (float)mStarBitmap.getHeight() / 11f;
+        XLog.d(true, 1, "mStarBitmap.getHeight(): " + mStarBitmap.getHeight() + ", mStarsHeight: " + mStarsHeight);
 
         updateCurrentStarBitmap();
     }
@@ -171,9 +173,13 @@ public class MovieStarView extends View {
         matrix.postScale(scaleWidth, scaleHeight);// 使用后乘
 
         final int x = 0;
-        final int y = (int) (mStarsHeight * (10-mStars/5) + 0.5f);
+        int y = (int) (mStarsHeight * (10-mStars/5) + 0.5f);
         final int width = mStarBitmap.getWidth();
         final int height = (int) mStarsHeight;
+        // 下面是避免出现越界的情形出现
+        if (y + height > mStarBitmap.getHeight()) {
+            y = mStarBitmap.getHeight() - height;
+        }
 
         mCurrentStartBitmap = Bitmap.createBitmap(mStarBitmap, x, y, width, height, matrix, false);
     }

@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.module.douban.Theater;
+package net.jiawa.jobhunter.module.douban.theater;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.TextHttpResponseHandler;

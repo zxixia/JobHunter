@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.module.douban.Theater;
+package net.jiawa.jobhunter.module.douban.theater;
 
 import net.jiawa.jobhunter.base.mvp.presenter.BaseListPresenter;
 import net.jiawa.jobhunter.base.mvp.view.BaseListView;

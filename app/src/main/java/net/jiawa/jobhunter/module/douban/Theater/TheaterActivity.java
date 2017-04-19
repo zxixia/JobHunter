@@ -1,4 +1,4 @@
-package net.jiawa.jobhunter.module.douban.Theater;
+package net.jiawa.jobhunter.module.douban.theater;
 
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.activities.BaseBackActivity;
