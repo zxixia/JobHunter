@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -117,5 +118,23 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public boolean isDestroy() {
         return mIsDestroy;
+    }
+
+    /**
+     * Sets the status bar to be light or not. Light status bar means dark icons.
+     * @param activate if true, make sure the status bar is light, otherwise base on wallpaper.
+     */
+    protected void activateLightStatusBar(boolean activate) {
+        boolean lightStatusBar = activate;
+        int oldSystemUiFlags = getWindow().getDecorView().getSystemUiVisibility();
+        int newSystemUiFlags = oldSystemUiFlags;
+        if (lightStatusBar) {
+            newSystemUiFlags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        } else {
+            newSystemUiFlags &= ~(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+        if (newSystemUiFlags != oldSystemUiFlags) {
+            getWindow().getDecorView().setSystemUiVisibility(newSystemUiFlags);
+        }
     }
 }

@@ -33,6 +33,10 @@
         <activity android:name=".module.douban.theater.TheaterActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".module.douban.movie.MovieActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/App.Theme.Main">
+        </activity>
     </application>
 
 </manifest>

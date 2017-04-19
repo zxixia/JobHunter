@@ -5,6 +5,7 @@ import android.view.View;
 import net.jiawa.jobhunter.base.adapter.BaseRecyclerAdapter;
 import net.jiawa.jobhunter.base.fragments.BaseRecyclerFragment;
 import net.jiawa.jobhunter.bean.douban.Subjects;
+import net.jiawa.jobhunter.module.douban.movie.MovieActivity;
 
 /**
  * Created by zhaoxin5 on 2017/4/17.
@@ -30,6 +31,6 @@ public class TheaterFragment extends BaseRecyclerFragment<TheaterContract.Theate
 
     @Override
     protected void onItemClick(Subjects subjects, int position) {
-
+        MovieActivity.show(getContext(), subjects);
     }
 }

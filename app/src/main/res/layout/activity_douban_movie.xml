@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="3000dp"
+    android:background="@color/amber_50">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1000dp"
+        android:background="@color/amber_300"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="true">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1000dp"
+            android:scaleType="fitXY"
+            android:id="@+id/iv_top_image"/>
+    </FrameLayout>
+</FrameLayout>
