@@ -5,8 +5,7 @@ import java.io.Serializable;
 /**
  * Auto-generated: 2017-04-17 15:20:12
  *
- * @author www.jsons.cn 
- * @website http://www.jsons.cn/json2java/ 
+ * @website http://www.jsons.cn/json2java/
  */
 public class Rating implements Serializable {
 

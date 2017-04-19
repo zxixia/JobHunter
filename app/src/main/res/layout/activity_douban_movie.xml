@@ -3,13 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="3000dp"
-    android:background="@color/amber_50">
+    android:background="@color/amber_50"
+    android:id="@+id/fl_root">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="1000dp"
-        android:background="@color/amber_300"
-        android:fitsSystemWindows="true"
-        android:clipToPadding="true">
+        android:background="@color/amber_300">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1000dp"

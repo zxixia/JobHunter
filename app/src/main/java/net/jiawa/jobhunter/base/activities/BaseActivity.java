@@ -137,4 +137,23 @@ public abstract class BaseActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(newSystemUiFlags);
         }
     }
+
+    protected void setFullScreen(boolean flush) {
+        if (flush) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                      View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        } else {
+            // 这样设置不会冲掉原来的设置项目
+            int oldSystemUiFlags = getWindow().getDecorView().getSystemUiVisibility();
+            int newSystemUiFlags = oldSystemUiFlags;
+            newSystemUiFlags |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+            newSystemUiFlags |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+            newSystemUiFlags |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            if (newSystemUiFlags != oldSystemUiFlags) {
+                getWindow().getDecorView().setSystemUiVisibility(newSystemUiFlags);
+            }
+        }
+    }
 }

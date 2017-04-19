@@ -3,7 +3,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Date;
 /**
  * Auto-generated: 2017-04-17 15:20:12
  *
@@ -20,7 +19,7 @@ public class Subjects implements Serializable {
     @SerializedName("collect_count")
     private int collectCount;
     @SerializedName("mainland_pubdate")
-    private Date mainlandPubdate;
+    private String mainlandPubdate;
     @SerializedName("has_video")
     private boolean hasVideo;
     @SerializedName("original_title")
@@ -74,10 +73,10 @@ public class Subjects implements Serializable {
          return collectCount;
      }
 
-    public void setMainlandPubdate(Date mainlandPubdate) {
+    public void setMainlandPubdate(String mainlandPubdate) {
          this.mainlandPubdate = mainlandPubdate;
      }
-     public Date getMainlandPubdate() {
+     public String getMainlandPubdate() {
          return mainlandPubdate;
      }
 

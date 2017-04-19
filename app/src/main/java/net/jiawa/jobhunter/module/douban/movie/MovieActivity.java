@@ -6,6 +6,7 @@ package net.jiawa.jobhunter.module.douban.movie;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -60,5 +61,6 @@ public class MovieActivity extends BaseActivity {
     protected void initWindow() {
         super.initWindow();
         activateLightStatusBar(true);
+        setFullScreen(false);
     }
 }
