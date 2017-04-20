@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.utils.TDevice;
+import net.jiawa.jobhunter.utils.UiUtil;
 
 /**
  * Created by JuQiu
@@ -25,6 +26,7 @@ public class TitleBar extends FrameLayout {
     private static int EXT_PADDING_TOP;
     private TextView mTitle;
     private ImageView mIcon;
+    private boolean mConsiderStatusBar = false;
 
 
     public TitleBar(Context context) {
@@ -66,10 +68,12 @@ public class TitleBar extends FrameLayout {
 
             String title = a.getString(R.styleable.TitleBar_aTitle);
             Drawable drawable = a.getDrawable(R.styleable.TitleBar_aIcon);
+            boolean considerStatusBar = a.getBoolean(R.styleable.TitleBar_aConsiderStatusBar, false);
             a.recycle();
 
             mTitle.setText(title);
             mIcon.setImageDrawable(drawable);
+            mConsiderStatusBar = considerStatusBar;
         } else {
             mIcon.setVisibility(GONE);
         }
@@ -80,7 +84,15 @@ public class TitleBar extends FrameLayout {
         // Init padding
         // 这里设置topPadding
         // 让当前的title文字空出上方的statusbar的高度
-        // setPadding(getLeft(), getTop() + UiUtil.getStatusBarHeight(getContext()), getRight(), getBottom());
+        if (mConsiderStatusBar) {
+            setPadding(getLeft(), getTop() + UiUtil.getStatusBarHeight(getContext()), getRight(), getBottom());
+        }
+    }
+
+    public void setTitleString(String title) {
+        if (null == title)
+            return;
+        mTitle.setText(title);
     }
 
     public void setTitle(@StringRes int titleRes) {
@@ -106,7 +118,8 @@ public class TitleBar extends FrameLayout {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         float d = getResources().getDisplayMetrics().density;
         // 48dp是ActionBar的最小高度
-        int minH = (int) (d * 48 /*+ UiUtil.getStatusBarHeight(getContext())*/);
+        int extHeight = mConsiderStatusBar ? UiUtil.getStatusBarHeight(getContext()) : 0;
+        int minH = (int) (d * 48 + extHeight);
 
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(minH, MeasureSpec.EXACTLY);
 
