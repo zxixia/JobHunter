@@ -38,8 +38,15 @@ public abstract class BaseTitleActivity extends BaseActivity implements
     @Override
     protected void initWidget() {
         super.initWidget();
+        if (mScroll == null) {
+            // TODO 不知道为什么这里有可能为空？
+            mScroll = (NestedScrollView) findViewById(R.id.nsv_root);
+        }
         mScroll.setOnScrollChangeListener(this);
 
+        if (mTitleBar == null) {
+            mTitleBar = (TitleBar) findViewById(R.id.nav_title_bar);
+        }
         // 隐藏图标
         mTitleBar.setIcon(0);
     }
@@ -51,11 +58,11 @@ public abstract class BaseTitleActivity extends BaseActivity implements
         mTitleBar.setTitleString(title);
     }
 
-    public interface OnScroll {
+    public interface TitleBarOnScroll {
         float onScroll(int scrollY);
     }
 
-    OnScroll mOnScroll = new OnScroll() {
+    TitleBarOnScroll mTitleBarOnScroll = new TitleBarOnScroll() {
         @Override
         public float onScroll(int scrollY) {
             if (scrollY < 1) {
@@ -67,8 +74,8 @@ public abstract class BaseTitleActivity extends BaseActivity implements
             return ((float) scrollY) / 500f;
         }
     };
-    protected void setOnScroll(OnScroll onScroll) {
-        mOnScroll = onScroll;
+    protected void setTitleBarOnScroll(TitleBarOnScroll titleBarOnScroll) {
+        mTitleBarOnScroll = titleBarOnScroll;
     }
 
     NestedScrollView.OnScrollChangeListener mOnScrollChangeListener;
@@ -79,7 +86,7 @@ public abstract class BaseTitleActivity extends BaseActivity implements
     @Override
     public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
-        mTitleBar.setAlpha(mOnScroll.onScroll(scrollY));
+        mTitleBar.setAlpha(mTitleBarOnScroll.onScroll(scrollY));
 
         if (null != mOnScrollChangeListener) {
             mOnScrollChangeListener.onScrollChange(v, scrollX, scrollY, oldScrollX, oldScrollY);

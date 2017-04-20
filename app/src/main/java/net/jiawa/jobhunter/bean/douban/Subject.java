@@ -3,7 +3,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Date;
 /**
  * Auto-generated: 2017-04-20 16:28:27
  *
@@ -15,7 +14,7 @@ public class Subject implements Serializable {
     private SubjectRating rating;
     @SerializedName("reviews_count")
     private int reviewsCount;
-    private List<String> videos;
+    private List<Object> videos;
     @SerializedName("wish_count")
     private int wishCount;
     @SerializedName("original_title")
@@ -36,7 +35,7 @@ public class Subject implements Serializable {
     private String mobileUrl;
     @SerializedName("photos_count")
     private int photosCount;
-    private Date pubdate;
+    private String pubdate;
     private String title;
     @SerializedName("do_count")
     private String doCount;
@@ -50,7 +49,7 @@ public class Subject implements Serializable {
     @SerializedName("schedule_url")
     private String scheduleUrl;
     private List<Writers> writers;
-    private Date pubdates;
+    private List<String> pubdates;
     private String website;
     private List<String> tags;
     @SerializedName("has_schedule")
@@ -65,18 +64,18 @@ public class Subject implements Serializable {
     private List<String> trailerUrls;
     @SerializedName("has_ticket")
     private boolean hasTicket;
-    private List<String> bloopers;
+    private List<Object> bloopers;
     @SerializedName("clip_urls")
-    private List<String> clipUrls;
+    private List<Object> clipUrls;
     @SerializedName("current_season")
     private String currentSeason;
     private List<Casts> casts;
     private List<String> countries;
     @SerializedName("mainland_pubdate")
-    private Date mainlandPubdate;
+    private String mainlandPubdate;
     private List<Photos> photos;
     private String summary;
-    private List<String> clips;
+    private List<Object> clips;
     private String subtype;
     private List<Directors> directors;
     @SerializedName("comments_count")
@@ -100,10 +99,10 @@ public class Subject implements Serializable {
          return reviewsCount;
      }
 
-    public void setVideos(List<String> videos) {
+    public void setVideos(List<Object> videos) {
          this.videos = videos;
      }
-     public List<String> getVideos() {
+     public List<Object> getVideos() {
          return videos;
      }
 
@@ -191,10 +190,10 @@ public class Subject implements Serializable {
          return photosCount;
      }
 
-    public void setPubdate(Date pubdate) {
+    public void setPubdate(String pubdate) {
          this.pubdate = pubdate;
      }
-     public Date getPubdate() {
+     public String getPubdate() {
          return pubdate;
      }
 
@@ -254,10 +253,10 @@ public class Subject implements Serializable {
          return writers;
      }
 
-    public void setPubdates(Date pubdates) {
+    public void setPubdates(List<String> pubdates) {
          this.pubdates = pubdates;
      }
-     public Date getPubdates() {
+     public List<String> getPubdates() {
          return pubdates;
      }
 
@@ -331,17 +330,17 @@ public class Subject implements Serializable {
          return hasTicket;
      }
 
-    public void setBloopers(List<String> bloopers) {
+    public void setBloopers(List<Object> bloopers) {
          this.bloopers = bloopers;
      }
-     public List<String> getBloopers() {
+     public List<Object> getBloopers() {
          return bloopers;
      }
 
-    public void setClipUrls(List<String> clipUrls) {
+    public void setClipUrls(List<Object> clipUrls) {
          this.clipUrls = clipUrls;
      }
-     public List<String> getClipUrls() {
+     public List<Object> getClipUrls() {
          return clipUrls;
      }
 
@@ -366,10 +365,10 @@ public class Subject implements Serializable {
          return countries;
      }
 
-    public void setMainlandPubdate(Date mainlandPubdate) {
+    public void setMainlandPubdate(String mainlandPubdate) {
          this.mainlandPubdate = mainlandPubdate;
      }
-     public Date getMainlandPubdate() {
+     public String getMainlandPubdate() {
          return mainlandPubdate;
      }
 
@@ -387,10 +386,10 @@ public class Subject implements Serializable {
          return summary;
      }
 
-    public void setClips(List<String> clips) {
+    public void setClips(List<Object> clips) {
          this.clips = clips;
      }
-     public List<String> getClips() {
+     public List<Object> getClips() {
          return clips;
      }
 

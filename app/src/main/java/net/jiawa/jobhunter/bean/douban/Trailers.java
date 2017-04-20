@@ -2,7 +2,6 @@ package net.jiawa.jobhunter.bean.douban;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.Date;
 /**
  * Auto-generated: 2017-04-20 16:28:27
  *
@@ -15,7 +14,7 @@ public class Trailers implements Serializable {
     private String title;
     @SerializedName("subject_id")
     private String subjectId;
-    private Date alt;
+    private String alt;
     private String small;
     @SerializedName("resource_url")
     private String resourceUrl;
@@ -41,10 +40,10 @@ public class Trailers implements Serializable {
          return subjectId;
      }
 
-    public void setAlt(Date alt) {
+    public void setAlt(String alt) {
          this.alt = alt;
      }
-     public Date getAlt() {
+     public String getAlt() {
          return alt;
      }
 

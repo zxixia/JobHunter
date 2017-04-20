@@ -30,6 +30,7 @@ public class TheaterActivity extends BaseBackActivity implements TheaterContract
         mEmptyLayout.setOnErrorListener(new EmptyLayout.onErrorListener() {
             @Override
             public void onError() {
+                mEmptyLayout.updateStatus(EmptyLayout.STATUS.START, "拼命加载中...");
                 mPresenter.getTheaters();
             }
         });

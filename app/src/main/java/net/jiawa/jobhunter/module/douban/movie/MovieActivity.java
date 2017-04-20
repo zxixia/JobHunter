@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.activities.BaseTitleActivity;
+import net.jiawa.jobhunter.bean.douban.Subject;
 import net.jiawa.jobhunter.bean.douban.Subjects;
 
 import butterknife.Bind;
@@ -14,11 +15,13 @@ import butterknife.Bind;
  * Created by zhaoxin5 on 2017/4/20.
  */
 
-public class MovieActivity extends BaseTitleActivity {
+public class MovieActivity extends BaseTitleActivity implements MovieContract.BasicInfoView {
 
     @Bind(R.id.iv_top_image)
     ImageView mTopImage;
     Subjects mSubjects;
+
+    MovieContract.MoviePresenter mPresenter;
 
     @Override
     protected int getChildContentViewId() {
@@ -47,5 +50,29 @@ public class MovieActivity extends BaseTitleActivity {
                 .asBitmap()
                 .placeholder(R.mipmap.ic_launcher)
                 .into(mTopImage);
+        MoviePresenter presenter = new MoviePresenter(this, mSubjects);
+        presenter.getSubject(mSubjects.getId());
     }
+
+    @Override
+    public void onGetSubjectSuccessful(Subject subject) {
+        getImageLoader()
+                .load(subject.getPhotos().get(0).getImage())
+                .asBitmap()
+                .placeholder(R.mipmap.ic_launcher)
+                .into(mTopImage);
+    }
+
+    @Override
+    public void onGetSubjectFailed() {
+
+    }
+
+    @Override
+    public void setPresenter(MovieContract.MoviePresenter presenter) {
+        mPresenter = presenter;
+    }
+
+    @Override
+    public void showNetworkError(int strId) {}
 }
