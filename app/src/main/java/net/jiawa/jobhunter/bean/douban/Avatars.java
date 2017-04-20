@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author www.jsons.cn 
  * @website http://www.jsons.cn/json2java/ 
  */
-public class Avatars  implements Serializable {
+public class Avatars implements Serializable {
 
     private String small;
     private String large;
