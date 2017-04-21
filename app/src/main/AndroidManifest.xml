@@ -38,7 +38,8 @@
             android:theme="@style/App.Theme.FullScreen">
         </activity>
         <activity android:name=".module.douban.TopImageActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/App.Theme.FullScreen">
         </activity>
     </application>
 

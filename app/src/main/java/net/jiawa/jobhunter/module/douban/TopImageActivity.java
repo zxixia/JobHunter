@@ -29,4 +29,10 @@ public class TopImageActivity extends BaseActivity {
         super.initWidget();
         mPullNestedScrollView.setHeader(mImageView);
     }
+
+    @Override
+    protected void initWindow() {
+        super.initWindow();
+        setFullScreen(true);
+    }
 }

@@ -276,50 +276,85 @@ public class PullNestedScrollView extends NestedScrollView {
             float contentMoveHeight = deltaY * SCROLL_RATIO;
 
             /***
+             *
+             * 刚开始:
+             *
              *          --------------- <- mInitTop,
-             *          |             |    顶部图片的原始top位置,layout_marginTop="-100dp"实现的
-             *          |      不可见 |
+             *          |             |    顶部图片的原始top位置,
+             *          |   invisible |    layout_marginTop="-100dp"实现的
              *          |             |
              *          |             |
-             *  phone --------------------------------------------------------------------- <-  mContentRect.top,contentView的原始top值
-             *          |             | <- mHeaderVisibleHeight,     |                   |
-             *          |             |    顶部图片的初始可视区域    |                   |
-             *          |        可见 |                              |                   |
+             *  phone --------------------------------------------------------------------- <-  mContentRect.top,
+             *          |             |                              |                   |      contentView的原始top值
+             *          |             |                              |   invisible       |
+             *          |     visible |                              |                   |
              *          |             |                              |                   |
              *          ------------------------------------------------------------------  <-  layout_marginTop="100dp"实现的
-             *          |             |                              |                   |
-             *          |      不可见 |                              |                   |
-             *          |             |                              |                   |
+             *          |             |                              |   visible area    |
+             *          |   invisible |                              |   of the          |
+             *          |             |                              |   scrollView      |
              *          |             |                              |                   |
              *          --------------- <- mInitBottom,              |                   |
-             *                             顶部图片的原始bottom位置  |                   |
-             *                                                       |                   |
-             *                                                       ---------------------- <-  mContentRect.bottom,contentView的原始bottom值
-             *
-             *  移动以后:
+             *                             original bottom of the    |                   |
+             *                             top image                 |                   |
+             *                                                       ---------------------- <-  mContentRect.bottom,
+             *                                                                                  contentView的原始bottom值
+             *  移动中:
              *
              *          --------------- <- mCurrentTop = mInitTop + headerMoveHeight,
-             *          |    不可见   |    当前顶部图片的top位置
-             *          |             |    位移4个单位，top位移其中的一半2个单位
+             *          |   invisible |    当前顶部图片的top位置
+             *          |             |    移动了2个单位
              *  phone ----------------------------------------------------------------------------
-             *          |             |                        ,     |                   |     ↑
-             *          |      可见   |                              |                   |     位移了
-             *          |             |       图片可视               |                   |     4个单位
-             *          |             |       区域变大               |                   |     ↓
+             *          |             |                                                        ↑
+             *          |     visible |                                                      位移了
+             *          |             |   image visible area                                 4个单位
+             *          |             |   becomes enlarge                                      ↓
              *               ----                                    ------------------------------ <-  top
              *          |             |                              |                   |
-             *          |      可见   |                              |                   |
+             *          |     visible |                              |   invisible       |
              *          |             |                              |                   |
              *          |             |                              |                   |
              *          ------------------------------------------------------------------  <-  layout_marginTop="100dp"实现的
-             *          |    不可见   |                              |                   |
-             *          |             |                              |                   |
-             *          --------------- <- mCurrentBottom,           |                   |
-             *                             当前顶部图片的bottom位置  |                   |
-             *                             位移了4个单位             |                   |
-             *                             bottom位移了其中的        |                   |
-             *                             2个单位                   |                   |
+             *          |   invisible |                              |                   |      这个必须要大于mCurrentBottom
+             *          |             |                              |  visible area     |
+             *          --------------- <- mCurrentBottom,           |  of the           |
+             *                             current bottom of the     |  scrollView       |
+             *                             top image view            |                   |
+             *                             move down for             |                   |
+             *                             2                         |                   |
              *                                                       ---------------------  <-  bottom
+             *
+             *
+             *
+             *  移动到最下面:          mCurrentTop = mInitTop + headerMoveHeight,
+             *                        ↓  当前顶部图片的top位置，移动了4个单位
+             *  phone ----------------------------------------------------------------------------
+             *          |             |                                                       |
+             *          |             |                                                       |
+             *          |             |                                                       |
+             *          |     visible |
+             *               ----                                                         移动了8个单位
+             *          |             |   image visible area
+             *          |             |   becomes enlarge                                     |
+             *          |             |                                                       |
+             *          |     visible |                                                       |
+             *               ----                                    ------------------------------ <-  top
+             *          |             |                              |                   |
+             *          |             |                              |   invisible       |
+             *          |             |                              |                   |
+             *          |     visible |                              |                   |
+             *          ------------------------------------------------------------------  <-  layout_marginTop="100dp"实现的
+             *                       ↑                              |                   |      这个必须要大于mCurrentBottom
+             *                        mCurrentBottom                 |  visible area     |      不能再往下移动
+             *                        current bottom of the          |  of the           |      否则，盖不住顶部的图片
+             *                        top image view                 |  scrollView       |
+             *                        move down for  4               |                   |
+             *                                                       |                   |
+             *                                                       |                   |
+             *                                                       ---------------------  <-  bottom
+             *
+             *   从上图可知
+             *   top + layout_marginTop="100dp" <= mCurrentBottom
              *
              */
 
