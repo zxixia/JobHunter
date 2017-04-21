@@ -13,6 +13,7 @@ import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.fragments.BaseFragment;
 import net.jiawa.jobhunter.helper.AnimatorListenerHelper;
+import net.jiawa.jobhunter.module.douban.TopImageActivity;
 import net.jiawa.jobhunter.module.douban.theater.TheaterActivity;
 import net.jiawa.jobhunter.module.git.projectdetail.ProjectDetailActivity;
 import net.jiawa.jobhunter.module.main.MainTabFragment;
@@ -102,9 +103,14 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
             startActivity(TheaterActivity.class);
         }
 
+        if (newNavButton.getId() == R.id.tv_navigationbar_item_coder) {
+            startActivity(TopImageActivity.class);
+        }
+
         if (newNavButton.getId() != R.id.tv_navigationbar_item_job) {
             return;
         }
+
         XLog.d(true, 1);
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         if (oldNavButton != null) {
