@@ -11,6 +11,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 
+import net.jiawa.debughelper.XLog;
+import net.jiawa.jobhunter.R;
+
 /**
  * Created by zhaoxin5 on 2017/4/21.
  */
@@ -23,7 +26,7 @@ import android.view.animation.TranslateAnimation;
  */
 public class PullNestedScrollView extends NestedScrollView {
 
-    private static final String LOG_TAG = "PullScrollView";
+    private static final String LOG_TAG = "PullNestedScrollView";
     /** 阻尼系数,越小阻力就越大. */
     private static final float SCROLL_RATIO = 0.5f;
 
@@ -32,6 +35,9 @@ public class PullNestedScrollView extends NestedScrollView {
 
     /** 头部view. */
     private View mHeader;
+
+    /** 头部view的id. */
+    private int mHeaderId;
 
     /** 头部view高度. */
     private int mHeaderHeight;
@@ -95,14 +101,19 @@ public class PullNestedScrollView extends NestedScrollView {
         setOverScrollMode(OVER_SCROLL_NEVER);
 
         if (null != attrs) {
-            /*TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PullScrollView);
+            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PullNestedScrollView);
 
             if (ta != null) {
-                mHeaderHeight = (int) ta.getDimension(R.styleable.PullScrollView_headerHeight, -1);
+                mHeaderHeight = (int) ta.getDimension(R.styleable.PullNestedScrollView_headerHeight, -1);
                 mHeaderVisibleHeight = (int) ta.getDimension(R.styleable
-                        .PullScrollView_headerVisibleHeight, -1);
+                        .PullNestedScrollView_headerVisibleHeight, -1);
+                mHeaderId = ta.getResourceId(R.styleable.PullNestedScrollView_header, -1);
+
+                // mHeaderHeight: 600
+                // 图片正常要显示的高度是600
+                XLog.d(true, 1, "mHeaderHeight: " + mHeaderHeight);
                 ta.recycle();
-            }*/
+            }
         }
     }
 
@@ -151,12 +162,25 @@ public class PullNestedScrollView extends NestedScrollView {
             int action = ev.getAction();
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
+                    // 记录触摸的初始位置信息
                     mStartPoint.set(ev.getX(), ev.getY());
                     mCurrentTop = mInitTop = mHeader.getTop();
                     mCurrentBottom = mInitBottom = mHeader.getBottom();
+                    //
+                    // 初始位置信息是负的,因为这个顶部有1/3是隐藏的
+                    // [mInitTop: -199, mInitBottom: 401]
+                    //
+                    // 可以看到图片正常应该显示的高度就是
+                    //  401-(-199) = 600
+                    //  public final int getHeight() {
+                    //      return mBottom - mTop;
+                    //  }
+                    //
+                    XLog.d(true, 1, "mInitTop: " + mInitTop + ", mInitBottom: " + mInitBottom);
                     return super.onTouchEvent(ev);
                 case MotionEvent.ACTION_MOVE:
                     float deltaY = Math.abs(ev.getY() - mStartPoint.y);
+                    // 确保是纵轴方向的滑动
                     if (deltaY > 10 && deltaY > Math.abs(ev.getX() - mStartPoint.x)) {
                         mHeader.clearAnimation();
                         mContentView.clearAnimation();
@@ -228,6 +252,8 @@ public class PullNestedScrollView extends NestedScrollView {
             if (getScrollY() <= deltaY) {
                 isMoving = true;
             }
+            // 不要越界
+            // 最小是0， 最大是顶部图片的高度
             deltaY = deltaY < 0 ? 0 : (deltaY > mHeaderHeight ? mHeaderHeight : deltaY);
         }
 
@@ -235,17 +261,67 @@ public class PullNestedScrollView extends NestedScrollView {
             // 初始化content view矩形
             if (mContentRect.isEmpty()) {
                 // 保存正常的布局位置
+                // 这是最开始的布局位置信息
                 mContentRect.set(mContentView.getLeft(), mContentView.getTop(), mContentView.getRight(),
                         mContentView.getBottom());
             }
 
             // 计算header移动距离(手势移动的距离*阻尼系数*0.5)
             float headerMoveHeight = deltaY * 0.5f * SCROLL_RATIO;
+            // 这里的0.5是表明上下各分一半
             mCurrentTop = (int) (mInitTop + headerMoveHeight);
             mCurrentBottom = (int) (mInitBottom + headerMoveHeight);
 
             // 计算content移动距离(手势移动的距离*阻尼系数)
             float contentMoveHeight = deltaY * SCROLL_RATIO;
+
+            /***
+             *          --------------- <- mInitTop,
+             *          |             |    顶部图片的原始top位置,layout_marginTop="-100dp"实现的
+             *          |      不可见 |
+             *          |             |
+             *          |             |
+             *  phone --------------------------------------------------------------------- <-  mContentRect.top,contentView的原始top值
+             *          |             | <- mHeaderVisibleHeight,     |                   |
+             *          |             |    顶部图片的初始可视区域    |                   |
+             *          |        可见 |                              |                   |
+             *          |             |                              |                   |
+             *          ------------------------------------------------------------------  <-  layout_marginTop="100dp"实现的
+             *          |             |                              |                   |
+             *          |      不可见 |                              |                   |
+             *          |             |                              |                   |
+             *          |             |                              |                   |
+             *          --------------- <- mInitBottom,              |                   |
+             *                             顶部图片的原始bottom位置  |                   |
+             *                                                       |                   |
+             *                                                       ---------------------- <-  mContentRect.bottom,contentView的原始bottom值
+             *
+             *  移动以后:
+             *
+             *          --------------- <- mCurrentTop = mInitTop + headerMoveHeight,
+             *          |    不可见   |    当前顶部图片的top位置
+             *          |             |    位移4个单位，top位移其中的一半2个单位
+             *  phone ----------------------------------------------------------------------------
+             *          |             |                        ,     |                   |     ↑
+             *          |      可见   |                              |                   |     位移了
+             *          |             |       图片可视               |                   |     4个单位
+             *          |             |       区域变大               |                   |     ↓
+             *               ----                                    ------------------------------ <-  top
+             *          |             |                              |                   |
+             *          |      可见   |                              |                   |
+             *          |             |                              |                   |
+             *          |             |                              |                   |
+             *          ------------------------------------------------------------------  <-  layout_marginTop="100dp"实现的
+             *          |    不可见   |                              |                   |
+             *          |             |                              |                   |
+             *          --------------- <- mCurrentBottom,           |                   |
+             *                             当前顶部图片的bottom位置  |                   |
+             *                             位移了4个单位             |                   |
+             *                             bottom位移了其中的        |                   |
+             *                             2个单位                   |                   |
+             *                                                       ---------------------  <-  bottom
+             *
+             */
 
             // 修正content移动的距离，避免超过header的底边缘
             int headerBottom = mCurrentBottom - mHeaderVisibleHeight;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--
@@ -8,6 +9,7 @@
     layout_marginTop = -100dp, 这样就让这个图片可以显示的只有200dp高度的内容
     -->
     <ImageView
+        android:id="@+id/iv_header_image"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="-100dp"
@@ -18,10 +20,14 @@
         这个View是match_parent的，
         所有它的有效touch范围是整个手机屏幕
     -->
-    <android.support.v4.widget.NestedScrollView
+    <net.jiawa.jobhunter.widgets.PullNestedScrollView
+        android:id="@+id/pnv_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        app:header="@id/iv_header_image"
+        app:headerHeight="300dp"
+        app:headerVisibleHeight="100dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -44,5 +50,5 @@
                 android:alpha="0.5">
             </RelativeLayout>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </net.jiawa.jobhunter.widgets.PullNestedScrollView>
 </RelativeLayout>

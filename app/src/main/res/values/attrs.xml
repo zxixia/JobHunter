@@ -10,4 +10,10 @@
     <declare-styleable name="MovieStar">
         <attr name="MovieStars" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="PullNestedScrollView">
+        <attr name="header" format="reference" />
+        <attr name="headerHeight" format="dimension" />
+        <attr name="headerVisibleHeight" format="dimension" />
+    </declare-styleable>
 </resources>
