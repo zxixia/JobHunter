@@ -40,7 +40,7 @@ public class PullNestedScrollView extends NestedScrollView {
     private int mHeaderId;
 
     /** 头部view高度. */
-    private int mHeaderHeight;
+    /*private int mHeaderHeight;*/
 
     /** 头部view显示高度. */
     private int mHeaderVisibleHeight;
@@ -104,14 +104,14 @@ public class PullNestedScrollView extends NestedScrollView {
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PullNestedScrollView);
 
             if (ta != null) {
-                mHeaderHeight = (int) ta.getDimension(R.styleable.PullNestedScrollView_headerHeight, -1);
+                // mHeaderHeight = (int) ta.getDimension(R.styleable.PullNestedScrollView_headerHeight, -1);
                 mHeaderVisibleHeight = (int) ta.getDimension(R.styleable
                         .PullNestedScrollView_headerVisibleHeight, -1);
                 mHeaderId = ta.getResourceId(R.styleable.PullNestedScrollView_header, -1);
 
                 // mHeaderHeight: 600
                 // 图片正常要显示的高度是600
-                XLog.d(true, 1, "mHeaderHeight: " + mHeaderHeight);
+                // XLog.d(true, 1, "mHeaderHeight: " + mHeaderHeight);
                 ta.recycle();
             }
         }
@@ -249,12 +249,24 @@ public class PullNestedScrollView extends NestedScrollView {
             isMoving = false;
 
         } else if (mState == State.DOWN) {
+            XLog.d(false, 1, "getScrollY(): " + getScrollY() + ", deltaY: " +deltaY);
             if (getScrollY() <= deltaY) {
                 isMoving = true;
             }
             // 不要越界
             // 最小是0， 最大是顶部图片的高度
-            deltaY = deltaY < 0 ? 0 : (deltaY > mHeaderHeight ? mHeaderHeight : deltaY);
+            /***
+             *
+             * deltaY 只能分一半给顶部的imageview的top值
+             * 同时这个一半还需要乘以一个阻尼系数SCROLL_RATIO
+             *
+             * 然后初始的mInitTop肯定是负的
+             * 只有将这个mInitTop从负值变成0
+             * 才能实现完整的将顶部图片拖出的全过程
+             *
+             */
+            int maxMove = (int) (Math.abs(mInitTop) / 0.5f / SCROLL_RATIO);
+            deltaY = deltaY < 0 ? 0 : (deltaY > maxMove ? maxMove : deltaY);
         }
 
         if (isMoving) {
@@ -264,6 +276,8 @@ public class PullNestedScrollView extends NestedScrollView {
                 // 这是最开始的布局位置信息
                 mContentRect.set(mContentView.getLeft(), mContentView.getTop(), mContentView.getRight(),
                         mContentView.getBottom());
+                XLog.d(true, 1, "left: " + mContentRect.left + ", top: " + mContentRect.top +
+                        ", right: " + mContentRect.right + ", bottom: " + mContentRect.bottom);
             }
 
             // 计算header移动距离(手势移动的距离*阻尼系数*0.5)
@@ -274,6 +288,8 @@ public class PullNestedScrollView extends NestedScrollView {
 
             // 计算content移动距离(手势移动的距离*阻尼系数)
             float contentMoveHeight = deltaY * SCROLL_RATIO;
+            XLog.d(true, 1, "mCurrentTop: " + mCurrentTop + ", mCurrentBottom: " + mCurrentBottom);
+            XLog.d(true, 1, "headerMoveHeight: " + headerMoveHeight + ", contentMoveHeight : " + contentMoveHeight);
 
             /***
              *
@@ -363,6 +379,7 @@ public class PullNestedScrollView extends NestedScrollView {
             int top = (int) (mContentRect.top + contentMoveHeight);
             int bottom = (int) (mContentRect.bottom + contentMoveHeight);
 
+            XLog.d(true, 1, "top: " + top + ", bottom: " + bottom);
             if (top <= headerBottom) {
                 // 移动content view
                 mContentView.layout(mContentRect.left, top, mContentRect.right, bottom);

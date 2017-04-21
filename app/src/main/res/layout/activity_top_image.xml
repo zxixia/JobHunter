@@ -26,7 +26,6 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         app:header="@id/iv_header_image"
-        app:headerHeight="300dp"
         app:headerVisibleHeight="100dp">
         <LinearLayout
             android:layout_width="match_parent"
