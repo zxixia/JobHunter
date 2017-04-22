@@ -38,9 +38,17 @@ public abstract class BaseTopImageActivity extends BaseActivity {
     @Override
     protected void initWidget() {
         super.initWidget();
+        if (null == mPullNestedScrollView) {
+            mPullNestedScrollView = (PullNestedScrollView) findViewById(R.id.pnv_scroll_view);
+            mImageView = (ImageView) findViewById(R.id.iv_header_image);
+        }
         mPullNestedScrollView.setHeader(mImageView);
     }
 
     protected abstract
     int getChildContentViewId();
+
+    protected ImageView getImageView() {
+        return mImageView;
+    }
 }

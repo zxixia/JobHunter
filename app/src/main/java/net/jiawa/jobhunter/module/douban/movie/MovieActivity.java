@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.activities.BaseTitleActivity;
+import net.jiawa.jobhunter.base.activities.BaseTopImageActivity;
 import net.jiawa.jobhunter.bean.douban.Subject;
 import net.jiawa.jobhunter.bean.douban.Subjects;
 
@@ -15,7 +16,7 @@ import butterknife.Bind;
  * Created by zhaoxin5 on 2017/4/20.
  */
 
-public class MovieActivity extends BaseTitleActivity implements MovieContract.BasicInfoView {
+public class MovieActivity extends BaseTopImageActivity implements MovieContract.BasicInfoView {
 
     @Bind(R.id.iv_top_image)
     ImageView mTopImage;
@@ -49,7 +50,7 @@ public class MovieActivity extends BaseTitleActivity implements MovieContract.Ba
                 .load(mSubjects.getImages().getLarge())
                 .asBitmap()
                 .placeholder(R.mipmap.ic_launcher)
-                .into(mTopImage);
+                .into(getImageView());
         MoviePresenter presenter = new MoviePresenter(this, mSubjects);
         presenter.getSubject(mSubjects.getId());
     }
@@ -60,7 +61,7 @@ public class MovieActivity extends BaseTitleActivity implements MovieContract.Ba
                 .load(subject.getPhotos().get(0).getImage())
                 .asBitmap()
                 .placeholder(R.mipmap.ic_launcher)
-                .into(mTopImage);
+                .into(getImageView());
     }
 
     @Override
