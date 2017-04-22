@@ -49,7 +49,7 @@ public class PullNestedScrollView extends NestedScrollView {
     private View mContentView;
 
     /** ScrollView的content view矩形. */
-    private Rect mContentRect = new Rect();
+    private Rect mContentRect = null;
 
     /** 首次点击的Y坐标. */
     private PointF mStartPoint = new PointF();
@@ -61,13 +61,18 @@ public class PullNestedScrollView extends NestedScrollView {
     private boolean isTop = false;
 
     /** 头部图片初始顶部和底部. */
-    private int mInitTop, mInitBottom;
+    // private int mInitTop, mInitBottom;
 
     /** 头部图片拖动时顶部和底部. */
     private int mCurrentTop, mCurrentBottom;
 
     /** 状态变化时的监听器. */
     private OnTurnListener mOnTurnListener;
+
+    /**
+     * 保存顶部图片的最原始的left, top, right, bottom
+     *  */
+    private Rect mHeaderRect = null;
 
     private enum State {
         /**顶部*/
@@ -111,7 +116,7 @@ public class PullNestedScrollView extends NestedScrollView {
 
                 // mHeaderHeight: 600
                 // 图片正常要显示的高度是600
-                // XLog.d(true, 1, "mHeaderHeight: " + mHeaderHeight);
+                // XLog.d(false, 1, "mHeaderHeight: " + mHeaderHeight);
                 ta.recycle();
             }
         }
@@ -143,11 +148,18 @@ public class PullNestedScrollView extends NestedScrollView {
     }
 
     @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        super.onScrollChanged(l, t, oldl, oldt);
+    protected void onScrollChanged(int scrollX, int scrollY,
+                                   int oldScrollX, int oldScrollY) {
+        super.onScrollChanged(scrollX, scrollY, oldScrollX, oldScrollY);
 
-        if (getScrollY() == 0) {
-            isTop = true;
+        XLog.d(false, 1, "scrollY: " + scrollY);
+        final int originalTop = mHeaderRect.top;
+        final int maxMove = (int) (Math.abs(originalTop) / 0.5f / SCROLL_RATIO);
+        if (0 <= scrollY && scrollY <= maxMove) {
+            // 在此范围内
+            // 上滑ScrollView,会把顶部的图片也滑动上去
+            mHeader.layout(mHeaderRect.left, mHeaderRect.top - scrollY,
+                             mHeaderRect.right, mHeaderRect.bottom - scrollY);
         }
     }
 
@@ -164,8 +176,24 @@ public class PullNestedScrollView extends NestedScrollView {
                 case MotionEvent.ACTION_DOWN:
                     // 记录触摸的初始位置信息
                     mStartPoint.set(ev.getX(), ev.getY());
-                    mCurrentTop = mInitTop = mHeader.getTop();
-                    mCurrentBottom = mInitBottom = mHeader.getBottom();
+                    mCurrentTop = mHeader.getTop();
+                    mCurrentBottom = mHeader.getBottom();
+                    if (null == mHeaderRect) {
+                        // 顶部图片最原始的位置信息
+                        mHeaderRect = new Rect();
+                        mHeaderRect.set(mHeader.getLeft(), mHeader.getTop(),
+                                mHeader.getRight(), mHeader.getBottom());
+                        XLog.d(true, 1, mHeaderRect.toString());
+                    }
+                    // 初始化content view矩形
+                    if (null == mContentRect) {
+                        // 保存正常的布局位置
+                        // 这是最开始的布局位置信息
+                        mContentRect = new Rect();
+                        mContentRect.set(mContentView.getLeft(), mContentView.getTop(),
+                                mContentView.getRight(), mContentView.getBottom());
+                        XLog.d(false, 1, mContentRect.toString());
+                    }
                     //
                     // 初始位置信息是负的,因为这个顶部有1/3是隐藏的
                     // [mInitTop: -199, mInitBottom: 401]
@@ -176,15 +204,21 @@ public class PullNestedScrollView extends NestedScrollView {
                     //      return mBottom - mTop;
                     //  }
                     //
-                    XLog.d(true, 1, "mInitTop: " + mInitTop + ", mInitBottom: " + mInitBottom);
                     return super.onTouchEvent(ev);
                 case MotionEvent.ACTION_MOVE:
                     float deltaY = Math.abs(ev.getY() - mStartPoint.y);
                     // 确保是纵轴方向的滑动
-                    if (deltaY > 10 && deltaY > Math.abs(ev.getX() - mStartPoint.x)) {
+                    if (deltaY > 0 && getScrollY() < 1/*deltaY > 10 && deltaY > Math.abs(ev.getX() - mStartPoint.x)*/) {
                         mHeader.clearAnimation();
                         mContentView.clearAnimation();
                         doActionMove(ev);
+                    }
+                    if (getScrollY() > 0) {
+                        /**
+                         * 修复将ScrollView先上滚一段距离
+                         * 然后下拉图片时,会有突变的情形出现
+                         */
+                        mStartPoint.set(ev.getX(), ev.getY());
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -193,9 +227,9 @@ public class PullNestedScrollView extends NestedScrollView {
                         rollBackAnimation();
                     }
 
-                    if (getScrollY() == 0) {
-                        mState = State.NORMAL;
-                    }
+                    // 只有在结束滑动时才清除当前状态
+                    // 此时才可以在doActionMove中进行UP和DOWN的切换
+                    mState = State.NORMAL;
 
                     isMoving = false;
                     break;
@@ -203,6 +237,7 @@ public class PullNestedScrollView extends NestedScrollView {
                     break;
 
             }
+            XLog.d(true, 1, "state: " + mState + ", isMoving: " + isMoving + ", ScrollY: " + getScrollY());
         }
 
         // 禁止控件本身的滑动.
@@ -223,16 +258,6 @@ public class PullNestedScrollView extends NestedScrollView {
      * @param event
      */
     private void doActionMove(MotionEvent event) {
-        // 当滚动到顶部时，将状态设置为正常，避免先向上拖动再向下拖动到顶端后首次触摸不响应的问题
-        if (getScrollY() == 0) {
-            mState = State.NORMAL;
-
-            // 滑动经过顶部初始位置时，修正Touch down的坐标为当前Touch点的坐标
-            if (isTop) {
-                isTop = false;
-                mStartPoint.y = event.getY();
-            }
-        }
 
         float deltaY = event.getY() - mStartPoint.y;
 
@@ -265,31 +290,22 @@ public class PullNestedScrollView extends NestedScrollView {
              * 才能实现完整的将顶部图片拖出的全过程
              *
              */
-            int maxMove = (int) (Math.abs(mInitTop) / 0.5f / SCROLL_RATIO);
+            int maxMove = (int) (Math.abs(mHeaderRect.top) / 0.5f / SCROLL_RATIO);
             deltaY = deltaY < 0 ? 0 : (deltaY > maxMove ? maxMove : deltaY);
         }
 
         if (isMoving) {
-            // 初始化content view矩形
-            if (mContentRect.isEmpty()) {
-                // 保存正常的布局位置
-                // 这是最开始的布局位置信息
-                mContentRect.set(mContentView.getLeft(), mContentView.getTop(), mContentView.getRight(),
-                        mContentView.getBottom());
-                XLog.d(true, 1, "left: " + mContentRect.left + ", top: " + mContentRect.top +
-                        ", right: " + mContentRect.right + ", bottom: " + mContentRect.bottom);
-            }
 
             // 计算header移动距离(手势移动的距离*阻尼系数*0.5)
             float headerMoveHeight = deltaY * 0.5f * SCROLL_RATIO;
             // 这里的0.5是表明上下各分一半
-            mCurrentTop = (int) (mInitTop + headerMoveHeight);
-            mCurrentBottom = (int) (mInitBottom + headerMoveHeight);
+            mCurrentTop = (int) (mHeaderRect.top + headerMoveHeight);
+            mCurrentBottom = (int) (mHeaderRect.bottom + headerMoveHeight);
 
             // 计算content移动距离(手势移动的距离*阻尼系数)
             float contentMoveHeight = deltaY * SCROLL_RATIO;
-            XLog.d(true, 1, "mCurrentTop: " + mCurrentTop + ", mCurrentBottom: " + mCurrentBottom);
-            XLog.d(true, 1, "headerMoveHeight: " + headerMoveHeight + ", contentMoveHeight : " + contentMoveHeight);
+            XLog.d(false, 1, "mCurrentTop: " + mCurrentTop + ", mCurrentBottom: " + mCurrentBottom);
+            XLog.d(false, 1, "headerMoveHeight: " + headerMoveHeight + ", contentMoveHeight : " + contentMoveHeight);
 
             /***
              *
@@ -379,7 +395,7 @@ public class PullNestedScrollView extends NestedScrollView {
             int top = (int) (mContentRect.top + contentMoveHeight);
             int bottom = (int) (mContentRect.bottom + contentMoveHeight);
 
-            XLog.d(true, 1, "top: " + top + ", bottom: " + bottom);
+            XLog.d(false, 1, "top: " + top + ", bottom: " + bottom);
             if (top <= headerBottom) {
                 // 移动content view
                 mContentView.layout(mContentRect.left, top, mContentRect.right, bottom);
@@ -392,11 +408,11 @@ public class PullNestedScrollView extends NestedScrollView {
 
     private void rollBackAnimation() {
         TranslateAnimation tranAnim = new TranslateAnimation(0, 0,
-                Math.abs(mInitTop - mCurrentTop), 0);
+                Math.abs(mHeaderRect.top - mCurrentTop), 0);
         tranAnim.setDuration(200);
         mHeader.startAnimation(tranAnim);
 
-        mHeader.layout(mHeader.getLeft(), mInitTop, mHeader.getRight(), mInitBottom);
+        mHeader.layout(mHeaderRect.left, mHeaderRect.top, mHeaderRect.right, mHeaderRect.bottom);
 
         // 开启移动动画
         TranslateAnimation innerAnim = new TranslateAnimation(0, 0, mContentView.getTop(), mContentRect.top);
@@ -404,10 +420,10 @@ public class PullNestedScrollView extends NestedScrollView {
         mContentView.startAnimation(innerAnim);
         mContentView.layout(mContentRect.left, mContentRect.top, mContentRect.right, mContentRect.bottom);
 
-        mContentRect.setEmpty();
+        // mContentRect.setEmpty();
 
         // 回调监听器
-        if (mCurrentTop > mInitTop + TURN_DISTANCE && mOnTurnListener != null){
+        if (mCurrentTop > mHeaderRect.top + TURN_DISTANCE && mOnTurnListener != null){
             mOnTurnListener.onTurn();
         }
     }
@@ -416,7 +432,7 @@ public class PullNestedScrollView extends NestedScrollView {
      * 是否需要开启动画
      */
     private boolean isNeedAnimation() {
-        return !mContentRect.isEmpty() && isMoving;
+        return !mContentRect.isEmpty() && isMoving && getScrollY() < 1;
     }
 
     /**
