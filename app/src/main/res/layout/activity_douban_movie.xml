@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_alignParentTop="true">
+    android:background="@color/amber_50">
     <ImageView
         android:id="@+id/iv_top_image"
         android:layout_width="200dp"
         android:layout_height="320dp"
         android:scaleType="fitXY"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_launcher"/>
     <ImageView
         android:layout_width="400dp"
         android:layout_height="640dp"

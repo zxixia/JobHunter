@@ -14,7 +14,7 @@ import butterknife.Bind;
 
 public class TopImageActivity extends BaseActivity {
 
-    @Bind(R.id.pnv_root)
+    @Bind(R.id.pnv_scroll_view)
     PullNestedScrollView mPullNestedScrollView;
     @Bind(R.id.iv_header_image)
     ImageView mImageView;
