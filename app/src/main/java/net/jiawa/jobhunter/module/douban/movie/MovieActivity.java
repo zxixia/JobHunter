@@ -51,6 +51,7 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
                 .asBitmap()
                 .placeholder(R.mipmap.ic_launcher)
                 .into(getImageView());
+        setTitle(mSubjects.getTitle());
         MoviePresenter presenter = new MoviePresenter(this, mSubjects);
         presenter.getSubject(mSubjects.getId());
     }

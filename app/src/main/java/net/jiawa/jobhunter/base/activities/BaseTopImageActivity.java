@@ -95,4 +95,8 @@ public abstract class BaseTopImageActivity extends BaseActivity implements
     public void onClick(View v) {
         XLog.d(true, 1, "" + v.toString());
     }
+
+    protected  void setTitle(String str) {
+        mTitleBar.setTitleString(str);
+    }
 }
