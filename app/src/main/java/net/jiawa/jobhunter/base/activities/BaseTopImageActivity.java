@@ -1,9 +1,11 @@
 package net.jiawa.jobhunter.base.activities;
 
 import android.support.v4.widget.NestedScrollView;
+import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
 
+import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.widgets.PullNestedScrollView;
 import net.jiawa.jobhunter.widgets.TitleBar;
@@ -15,7 +17,7 @@ import butterknife.Bind;
  */
 
 public abstract class BaseTopImageActivity extends BaseActivity implements
-        NestedScrollView.OnScrollChangeListener {
+        NestedScrollView.OnScrollChangeListener, View.OnClickListener {
 
     @Bind(R.id.pnv_scroll_view)
     PullNestedScrollView mPullNestedScrollView;
@@ -50,6 +52,9 @@ public abstract class BaseTopImageActivity extends BaseActivity implements
         }
         mPullNestedScrollView.setHeader(mImageView);
         mPullNestedScrollView.setOnScrollChangeListener(this);
+        mTitleBar.setOnClickListener(this);
+        mTitleBar.setClickable(false);
+        mTitleBar.setAlpha(0f);
     }
 
     protected abstract
@@ -79,5 +84,15 @@ public abstract class BaseTopImageActivity extends BaseActivity implements
     @Override
     public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
         mTitleBar.setAlpha(mTitleBarOnScroll.onScroll(scrollY));
+        if (mTitleBar.getAlpha() == 1f) {
+            mTitleBar.setClickable(true);
+        } else {
+            mTitleBar.setClickable(false);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        XLog.d(true, 1, "" + v.toString());
     }
 }

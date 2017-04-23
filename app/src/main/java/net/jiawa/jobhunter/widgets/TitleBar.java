@@ -10,10 +10,12 @@ import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.utils.TDevice;
 import net.jiawa.jobhunter.utils.UiUtil;
@@ -141,5 +143,19 @@ public class TitleBar extends FrameLayout {
             return (int) TDevice.dp2px(25, resources);
         }
         return EXT_PADDING_TOP;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        /**
+         * return true, 表示当前View要处理这个touch事件
+         * return false, 表示当前View不处理这个touch事件,
+         *               交回给父控件重新进行这个touch的分配
+         */
+        // 只有当当前View的Alpha是1f的时候
+        // 也就是全部显示的时候,才吃掉这个Touch
+        boolean swallowThisTouch = getAlpha() == 1f;
+        XLog.d(true, 1, "getAlpha(): " + getAlpha() + ", swallowThisTouch: " + swallowThisTouch);
+        return swallowThisTouch;
     }
 }
