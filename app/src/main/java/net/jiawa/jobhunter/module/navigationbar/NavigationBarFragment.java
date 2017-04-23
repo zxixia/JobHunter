@@ -11,14 +11,12 @@ import android.view.animation.DecelerateInterpolator;
 
 import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
-import net.jiawa.jobhunter.base.activities.BaseTopImageActivity;
 import net.jiawa.jobhunter.base.fragments.BaseFragment;
 import net.jiawa.jobhunter.helper.AnimatorListenerHelper;
-import net.jiawa.jobhunter.module.douban.TopImageActivity;
-import net.jiawa.jobhunter.module.douban.movie.MovieActivity2;
 import net.jiawa.jobhunter.module.douban.theater.TheaterActivity;
 import net.jiawa.jobhunter.module.git.projectdetail.ProjectDetailActivity;
 import net.jiawa.jobhunter.module.main.MainTabFragment;
+import net.jiawa.jobhunter.test.TestPullNestedViewActivity;
 import net.jiawa.jobhunter.widgets.NavigationButton;
 
 import java.util.List;
@@ -106,7 +104,7 @@ public class NavigationBarFragment extends BaseFragment implements View.OnClickL
         }
 
         if (newNavButton.getId() == R.id.tv_navigationbar_item_coder) {
-            startActivity(MovieActivity2.class);
+            startActivity(TestPullNestedViewActivity.class);
         }
 
         if (newNavButton.getId() != R.id.tv_navigationbar_item_job) {

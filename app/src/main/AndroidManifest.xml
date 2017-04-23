@@ -37,7 +37,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/App.Theme.FullScreen">
         </activity>
-        <activity android:name=".module.douban.movie.MovieActivity2"
+        <activity android:name=".test.TestPullNestedViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/App.Theme.FullScreen">
         </activity>

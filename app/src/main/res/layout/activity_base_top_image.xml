@@ -64,4 +64,18 @@
             </RelativeLayout>-->
         </LinearLayout>
     </net.jiawa.jobhunter.widgets.PullNestedScrollView>
+    <!--
+        顶部的titlebar，
+        要放下下面，这样才能位于最上面一层
+     -->
+    <net.jiawa.jobhunter.widgets.TitleBar
+        android:id="@+id/nav_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_alignParentTop="true"
+        app:aIcon="@mipmap/actionbar_search_icon"
+        app:aTitle="综合"
+        app:aConsiderStatusBar="true"
+        android:alpha="0"/>
 </RelativeLayout>
