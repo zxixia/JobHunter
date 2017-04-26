@@ -20,7 +20,7 @@
         android:layout_marginTop="-100dp"
         android:layout_alignParentTop="true"
         android:src="@drawable/scrollview_header"
-        android:scaleType="fitXY"/>
+        android:scaleType="centerCrop"/>
     <!--
         这个View是match_parent的，
         所有它的有效touch范围是整个手机屏幕
@@ -75,6 +75,7 @@
         android:layout_gravity="top"
         android:layout_alignParentTop="true"
         app:aIcon="@mipmap/actionbar_search_icon"
+        app:aIconBack="@mipmap/btn_back_normal"
         app:aTitle="综合"
         app:aConsiderStatusBar="true"
         android:alpha="0"/>

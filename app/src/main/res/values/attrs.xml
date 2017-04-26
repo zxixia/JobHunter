@@ -4,6 +4,7 @@
     <declare-styleable name="TitleBar">
         <attr name="aTitle" format="string" />
         <attr name="aIcon" format="reference" />
+        <attr name="aIconBack" format="reference" />
         <attr name="aConsiderStatusBar" format="boolean" />
     </declare-styleable>
 

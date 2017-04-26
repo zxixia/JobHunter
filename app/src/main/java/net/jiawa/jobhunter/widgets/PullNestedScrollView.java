@@ -186,7 +186,7 @@ public class PullNestedScrollView extends NestedScrollView {
                              * 要将ImageView和ContentView回退到原始的位置
                              */
                             rollBackAnimation(false);
-                            XLog.d(true, 1, "deltaY < 0.01f && isMovingDown");
+                            XLog.d(false, 1, "deltaY < 0.01f && isMovingDown");
                         }
                         /**
                          * 修复将ScrollView先上滚一段距离
@@ -231,7 +231,7 @@ public class PullNestedScrollView extends NestedScrollView {
     private void doMoveDown(MotionEvent event) {
 
         float deltaY = event.getY() - mStartPoint.y;
-        XLog.d(true, 1, "getScrollY(): " + getScrollY() + ", deltaY: " +deltaY);
+        XLog.d(false, 1, "getScrollY(): " + getScrollY() + ", deltaY: " +deltaY);
 
         // 不要越界
         // 最小是0， 最大是顶部图片的高度

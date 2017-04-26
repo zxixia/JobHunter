@@ -17,7 +17,7 @@ import butterknife.Bind;
  */
 
 public abstract class BaseTopImageActivity extends BaseActivity implements
-        NestedScrollView.OnScrollChangeListener, View.OnClickListener {
+        NestedScrollView.OnScrollChangeListener {
 
     @Bind(R.id.pnv_scroll_view)
     PullNestedScrollView mPullNestedScrollView;
@@ -52,9 +52,24 @@ public abstract class BaseTopImageActivity extends BaseActivity implements
         }
         mPullNestedScrollView.setHeader(mImageView);
         mPullNestedScrollView.setOnScrollChangeListener(this);
-        mTitleBar.setOnClickListener(this);
         mTitleBar.setClickable(false);
         mTitleBar.setAlpha(0f);
+        mTitleBar.setBackOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                XLog.d(true, 1, "mBackClickListener");
+                finish();
+            }
+        });
+        mTitleBar.setIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                XLog.d(true, 1, "mIconClickListener");
+            }
+        });
+
+        // 隐藏Icon
+        mTitleBar.setIcon(-1);
     }
 
     protected abstract
@@ -89,11 +104,6 @@ public abstract class BaseTopImageActivity extends BaseActivity implements
         } else {
             mTitleBar.setClickable(false);
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        XLog.d(true, 1, "" + v.toString());
     }
 
     protected  void setTitle(String str) {

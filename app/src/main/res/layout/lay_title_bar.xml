@@ -3,6 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_vertical|left"
+        android:layout_margin="@dimen/lay_2"
+        android:background="@drawable/ic_title_bar_icon_bg"
+        android:contentDescription="@string/app_name"
+        android:padding="@dimen/lay_4"
+        android:scaleType="centerInside" />
+
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
