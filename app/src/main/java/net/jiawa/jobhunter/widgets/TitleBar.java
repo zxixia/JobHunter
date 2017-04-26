@@ -97,6 +97,8 @@ public class TitleBar extends FrameLayout implements View.OnClickListener {
 
         mBack.setOnClickListener(this);
         mIcon.setOnClickListener(this);
+
+        setAlpha(getAlpha());
     }
 
     public void setTitleString(String title) {
@@ -184,13 +186,6 @@ public class TitleBar extends FrameLayout implements View.OnClickListener {
     }*/
 
     @Override
-    public void setClickable(boolean clickable) {
-        super.setClickable(clickable);
-        mBack.setClickable(clickable);
-        mIcon.setClickable(clickable);
-    }
-
-    @Override
     public void onClick(View v) {
         final int id = v.getId();
         if (id == mBack.getId() && null != mBackClickListener) {
@@ -198,6 +193,19 @@ public class TitleBar extends FrameLayout implements View.OnClickListener {
         }
         if (id == mIcon.getId() && null != mIconClickListener) {
             mIconClickListener.onClick(v);
+        }
+    }
+
+    @Override
+    public void setAlpha(float alpha) {
+        super.setAlpha(alpha);
+        if (mIcon == null || mBack == null) return;
+        if (alpha > 0.3f) {
+            mIcon.setClickable(true);
+            mBack.setClickable(true);
+        } else {
+            mIcon.setClickable(false);
+            mBack.setClickable(false);
         }
     }
 }

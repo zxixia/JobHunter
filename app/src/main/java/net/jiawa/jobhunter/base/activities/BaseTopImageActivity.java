@@ -99,11 +99,6 @@ public abstract class BaseTopImageActivity extends BaseActivity implements
     @Override
     public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
         mTitleBar.setAlpha(mTitleBarOnScroll.onScroll(scrollY));
-        if (mTitleBar.getAlpha() == 1f) {
-            mTitleBar.setClickable(true);
-        } else {
-            mTitleBar.setClickable(false);
-        }
     }
 
     protected  void setTitle(String str) {
