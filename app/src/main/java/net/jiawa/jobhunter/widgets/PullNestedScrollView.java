@@ -19,44 +19,45 @@ import net.jiawa.jobhunter.R;
  */
 
 /**
- * 拷贝自
+ * 改编自
  * https://github.com/MarkMjw/PullScrollView
  *
- * 增加部分注释
+ * 说明
+ * 1，onTouchEvent只处理向下滑动
+ * 2，onScrollChanged处理向上滑动
  */
 public class PullNestedScrollView extends NestedScrollView {
 
     private static final String LOG_TAG = "PullNestedScrollView";
     /** 阻尼系数,越小阻力就越大. */
     private static final float SCROLL_RATIO = 0.5f;
-
     /** 滑动至翻转的距离. */
     private static final int TURN_DISTANCE = 100;
-
     /** 头部view. */
     private View mHeader;
-
     /** 头部view显示高度. */
     private int mHeaderVisibleHeight;
-
     /** ScrollView的content view. */
     private View mContentView;
-
-    /** ScrollView的content view矩形. */
+    /**
+     * ScrollView的content view矩形.
+     * 记录最开始的坐标
+     * */
     private Rect mContentRect = null;
-
-    /** 首次点击的Y坐标. */
+    /**
+     * 首次点击的Y坐标.
+     * 当现在是由NestedScrollView本身处理的向上滑动时
+     * 要时刻更新这个Y坐标
+     * 避免由onTouchEvent中进行处理时
+     * 计算y位移差出现较大的偏差
+     * */
     private PointF mStartPoint = new PointF();
-
-    /** 是否开始移动. */
+    /** 是否开始向下移动. */
     private boolean isMovingDown = false;
-
     /** 头部图片拖动时顶部和底部. */
     private int mCurrentTop, mCurrentBottom;
-
     /** 状态变化时的监听器. */
     private OnTurnListener mOnTurnListener;
-
     /**
      * 保存顶部图片的最原始的left, top, right, bottom
      *  */
@@ -262,7 +263,7 @@ public class PullNestedScrollView extends NestedScrollView {
          *
          * 刚开始:
          *
-         *          --------------- <- mInitTop,
+         *          --------------- <- mHeaderRect.top,
          *          |             |    顶部图片的原始top位置,
          *          |   invisible |    layout_marginTop="-100dp"实现的
          *          |             |
@@ -277,14 +278,14 @@ public class PullNestedScrollView extends NestedScrollView {
          *          |   invisible |                              |   of the          |
          *          |             |                              |   scrollView      |
          *          |             |                              |                   |
-         *          --------------- <- mInitBottom,              |                   |
+         *          --------------- <- mHeaderRect.bottom,       |                   |
          *                             original bottom of the    |                   |
          *                             top image                 |                   |
          *                                                       ---------------------- <-  mContentRect.bottom,
          *                                                                                  contentView的原始bottom值
          *  移动中:
          *
-         *          --------------- <- mCurrentTop = mInitTop + headerMoveHeight,
+         *          --------------- <- mCurrentTop = mHeaderRect.top + headerMoveHeight,
          *          |   invisible |    当前顶部图片的top位置
          *          |             |    移动了2个单位
          *  phone ----------------------------------------------------------------------------
@@ -309,7 +310,7 @@ public class PullNestedScrollView extends NestedScrollView {
          *
          *
          *
-         *  移动到最下面:          mCurrentTop = mInitTop + headerMoveHeight,
+         *  移动到最下面:          mCurrentTop = mHeaderRect.top + headerMoveHeight,
          *                        ↓  当前顶部图片的top位置，移动了4个单位
          *  phone ----------------------------------------------------------------------------
          *          |             |                                                       |
@@ -327,12 +328,12 @@ public class PullNestedScrollView extends NestedScrollView {
          *          |             |                              |                   |
          *          |     visible |                              |                   |
          *          ------------------------------------------------------------------  <-  layout_marginTop="100dp"实现的
-         *                       ↑                              |                   |      这个必须要大于mCurrentBottom
-         *                        mCurrentBottom                 |  visible area     |      不能再往下移动
-         *                        current bottom of the          |  of the           |      否则，盖不住顶部的图片
-         *                        top image view                 |  scrollView       |
+         *                        A                              |                   |      这个必须要大于mCurrentBottom
+         *                        |                              |  visible area     |      不能再往下移动
+         *                        mCurrentBottom                 |  of the           |      否则，盖不住顶部的图片
+         *                        current bottom of the          |  scrollView       |
+         *                        top image view                 |                   |
          *                        move down for  4               |                   |
-         *                                                       |                   |
          *                                                       |                   |
          *                                                       ---------------------  <-  bottom
          *
