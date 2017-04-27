@@ -55,14 +55,14 @@ public class TheaterAdapter extends BaseGeneralRecyclerAdapter<Subjects> {
         h.mDirectors.setText(generateString(subjects.getDirectors()));
     }
 
-    private String castObject(Object o) {
+    public static String castObject(Object o) {
         if (o instanceof String) return (String)o;
         if (o instanceof Casts) return ((Casts)o).getName();
         if (o instanceof Directors) return ((Directors)o).getName();
         return o.toString();
     }
 
-    private <Model> String generateString(List<Model> models) {
+    public static <Model> String generateString(List<Model> models) {
         if (null == models) return "";
         if (models.size() == 0) return "";
         StringBuilder sb = new StringBuilder();
