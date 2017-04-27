@@ -2,16 +2,29 @@ package net.jiawa.jobhunter.module.douban.movie;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.RequestManager;
+
+import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.activities.BaseTitleActivity;
 import net.jiawa.jobhunter.base.activities.BaseTopImageActivity;
+import net.jiawa.jobhunter.base.adapter.BaseGeneralRecyclerAdapter;
+import net.jiawa.jobhunter.base.adapter.BaseRecyclerAdapter;
 import net.jiawa.jobhunter.bean.douban.Subject;
 import net.jiawa.jobhunter.bean.douban.Subjects;
 import net.jiawa.jobhunter.module.douban.theater.TheaterAdapter;
 import net.jiawa.jobhunter.widgets.MovieStarView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.Bind;
 
@@ -19,7 +32,8 @@ import butterknife.Bind;
  * Created by zhaoxin5 on 2017/4/20.
  */
 
-public class MovieActivity extends BaseTopImageActivity implements MovieContract.BasicInfoView {
+public class MovieActivity extends BaseTopImageActivity implements MovieContract.BasicInfoView,
+        BaseGeneralRecyclerAdapter.Callback {
 
     @Bind(R.id.tv_title)
     TextView mTitle;
@@ -37,9 +51,11 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
     MovieStarView mStars;
     @Bind(R.id.tv_summary)
     TextView mSummary;
+    protected RecyclerView mCasts;
     Subjects mSubjects;
 
     MovieContract.MoviePresenter mPresenter;
+    BaseRecyclerAdapter<Object> mAdapter;
 
     @Override
     protected int getChildContentViewId() {
@@ -56,6 +72,9 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
     @Override
     protected void initWidget() {
         super.initWidget();
+
+        mCasts = (RecyclerView) findViewById(R.id.rv_casts);
+        mCasts.setLayoutManager(getLayoutManager());
     }
 
     @Override
@@ -88,12 +107,23 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
         mScores.setText("" + mSubjects.getRating().getAverage());
         mStars.setStars(Integer.valueOf(mSubjects.getRating().getStars()));
         mPeopleCount.setText(subject.getRatingsCount() + "人");
-        mSummary.setText(subject.getSummary());
+        mSummary.setText(subject.getSummary().replace("\n", ""));
+
+        mAdapter = new CastsAdapter(this);
+        mCasts.setAdapter(mAdapter);
+
+        mPresenter.getCastsList(subject.getCasts(), subject.getDirectors());
     }
 
     @Override
     public void onGetSubjectFailed() {
 
+    }
+
+    @Override
+    public void onGetCasts(List<Object> list) {
+        XLog.d(true, 1, Arrays.toString(list.toArray()));
+        mAdapter.resetItem(list);
     }
 
     @Override
@@ -103,4 +133,25 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
 
     @Override
     public void showNetworkError(int strId) {}
+
+    @Override
+    public RequestManager getImgLoader() {
+        return getImageLoader();
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public Date getSystemTime() {
+        return new Date();
+    }
+
+    protected RecyclerView.LayoutManager getLayoutManager() {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        return linearLayoutManager;
+    }
 }

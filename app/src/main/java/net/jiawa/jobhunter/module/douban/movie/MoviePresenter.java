@@ -4,9 +4,14 @@ import com.google.gson.Gson;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import net.jiawa.debughelper.XLog;
+import net.jiawa.jobhunter.bean.douban.Casts;
+import net.jiawa.jobhunter.bean.douban.Directors;
 import net.jiawa.jobhunter.bean.douban.Subject;
 import net.jiawa.jobhunter.bean.douban.Subjects;
 import net.jiawa.jobhunter.module.douban.DouBanAPI;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -19,6 +24,7 @@ public class MoviePresenter implements MovieContract.MoviePresenter {
     Subjects mSubjects;
     Subject mSubject;
     MovieContract.BasicInfoView mBasicInfoView;
+    List<Object> mCasts = null;
 
     public MoviePresenter(MovieContract.BasicInfoView basicInfoView, Subjects subjects) {
         mSubjects = subjects;
@@ -42,5 +48,20 @@ public class MoviePresenter implements MovieContract.MoviePresenter {
                 mBasicInfoView.onGetSubjectSuccessful(mSubject);
             }
         });
+    }
+
+    @Override
+    public void getCastsList(List<Casts> casts, List<Directors> directorses) {
+        // 将两个list拼接起来
+        mCasts = new ArrayList<Object>();
+        if (null != directorses && directorses.size() > 0) {
+            mCasts.addAll(directorses);
+        }
+
+        if (null != casts && casts.size() > 0) {
+            mCasts.addAll(casts);
+        }
+
+        mBasicInfoView.onGetCasts(mCasts);
     }
 }
