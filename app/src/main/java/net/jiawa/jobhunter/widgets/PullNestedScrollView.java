@@ -138,7 +138,37 @@ public class PullNestedScrollView extends NestedScrollView {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return onTouchEvent(ev) || super.onInterceptTouchEvent(ev);
+        boolean onInterceptTouchEvent = super.onInterceptTouchEvent(ev);
+        XLog.d(true, 1, "onInterceptTouchEvent: " + onInterceptTouchEvent);
+        return onInterceptTouchEvent;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                XLog.d(true, 1, "=====" + ev.getY());
+                mStartPoint.set(ev.getX(), ev.getY());
+                if (null == mHeaderRect) {
+                    // 顶部图片最原始的位置信息
+                    mHeaderRect = new Rect();
+                    mHeaderRect.set(mHeader.getLeft(), mHeader.getTop(),
+                            mHeader.getRight(), mHeader.getBottom());
+                    XLog.d(true, 1, mHeaderRect.toString());
+                }
+                // 初始化content view矩形
+                if (null == mContentRect) {
+                    // 保存正常的布局位置
+                    // 这是最开始的布局位置信息
+                    mContentRect = new Rect();
+                    mContentRect.set(mContentView.getLeft(), mContentView.getTop(),
+                            mContentView.getRight(), mContentView.getBottom());
+                    XLog.d(true, 1, mContentRect.toString());
+                }
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
@@ -147,26 +177,6 @@ public class PullNestedScrollView extends NestedScrollView {
             int action = ev.getAction();
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
-                    // 记录触摸的初始位置信息
-                    mStartPoint.set(ev.getX(), ev.getY());
-                    mCurrentTop = mHeader.getTop();
-                    mCurrentBottom = mHeader.getBottom();
-                    if (null == mHeaderRect) {
-                        // 顶部图片最原始的位置信息
-                        mHeaderRect = new Rect();
-                        mHeaderRect.set(mHeader.getLeft(), mHeader.getTop(),
-                                mHeader.getRight(), mHeader.getBottom());
-                        XLog.d(false, 1, mHeaderRect.toString());
-                    }
-                    // 初始化content view矩形
-                    if (null == mContentRect) {
-                        // 保存正常的布局位置
-                        // 这是最开始的布局位置信息
-                        mContentRect = new Rect();
-                        mContentRect.set(mContentView.getLeft(), mContentView.getTop(),
-                                mContentView.getRight(), mContentView.getBottom());
-                        XLog.d(false, 1, mContentRect.toString());
-                    }
                     return super.onTouchEvent(ev);
                 case MotionEvent.ACTION_MOVE:
                     float deltaY = ev.getY() - mStartPoint.y;
@@ -177,6 +187,7 @@ public class PullNestedScrollView extends NestedScrollView {
                         mContentView.clearAnimation();
                         isMovingDown = true;
                         doMoveDown(ev);
+                        XLog.d(true, 1, "mStartPoint.y: " + mStartPoint.y + ", deltaY: " + deltaY);
                     } else {
                         if (deltaY < 0.01f && isMovingDown) {
                             /**
