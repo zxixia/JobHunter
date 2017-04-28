@@ -136,6 +136,13 @@ public class PullNestedScrollView extends NestedScrollView {
         }
     }
 
+    /***
+     *
+     * 不对这里进行特殊的拦截
+     *
+     * @param ev
+     * @return
+     */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         boolean onInterceptTouchEvent = super.onInterceptTouchEvent(ev);
@@ -143,6 +150,18 @@ public class PullNestedScrollView extends NestedScrollView {
         return onInterceptTouchEvent;
     }
 
+    /***
+     * Touch的处理是这样的：
+     * 1, dispatchTouchEvent
+     * 2，onInterceptTouchEvent
+     * 3, onTouchEvent
+     *
+     * 肯定首先进入这个dispatchTouchEvent, 在这里记录当前点击位置,
+     * 因为有可能不进入onTouchEvent的MotionEvent.ACTION_DOWN分支
+     *
+     * @param ev
+     * @return
+     */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         int action = ev.getAction();
@@ -251,8 +270,8 @@ public class PullNestedScrollView extends NestedScrollView {
          * deltaY 只能分一半给顶部的imageview的top值
          * 同时这个一半还需要乘以一个阻尼系数SCROLL_RATIO
          *
-         * 然后初始的mInitTop肯定是负的
-         * 只有将这个mInitTop从负值变成0
+         * 然后初始的mHeaderRect.top肯定是负的
+         * 只有将这个mHeaderRect.top从负值变成0
          * 才能实现完整的将顶部图片拖出的全过程
          *
          */
