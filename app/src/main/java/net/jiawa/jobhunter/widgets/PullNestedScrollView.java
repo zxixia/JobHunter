@@ -136,7 +136,7 @@ public class PullNestedScrollView extends NestedScrollView {
                                    int oldScrollX, int oldScrollY) {
         super.onScrollChanged(scrollX, scrollY, oldScrollX, oldScrollY);
 
-        XLog.d(true, 1, "scrollY: " + scrollY);
+        XLog.d(false, 1, "scrollY: " + scrollY);
         final int originalTop = mHeaderRect.top;
         final int maxMove = (int) (Math.abs(originalTop) / 0.5f / SCROLL_RATIO);
         if (0 <= scrollY && scrollY <= maxMove) {
@@ -160,15 +160,15 @@ public class PullNestedScrollView extends NestedScrollView {
         switch (action) {
             case MotionEvent.ACTION_MOVE:
                 final float yDiff = ev.getY() - FirstTouchY;
-                if (getScrollY() == 0 && yDiff > TouchSlop) {
-                    XLog.d(true, 1, ".................... y: " + ev.getY() + ", FirstTouchY: " + FirstTouchY + ", yDiff: " + yDiff);
+                if (getScrollY() == 0 && yDiff > 0) {
+                    XLog.d(false, 1, ".................... y: " + ev.getY() + ", FirstTouchY: " + FirstTouchY + ", yDiff: " + yDiff);
                     return true;
                 }
                 break;
         }
 
         boolean onInterceptTouchEvent = super.onInterceptTouchEvent(ev);
-        XLog.d(true, 1, "y: " + ev.getY() + ", onInterceptTouchEvent: " + onInterceptTouchEvent + ", isMovingDown: " + isMovingDown);
+        XLog.d(false, 1, "y: " + ev.getY() + ", onInterceptTouchEvent: " + onInterceptTouchEvent + ", isMovingDown: " + isMovingDown);
         return onInterceptTouchEvent;
     }
 
@@ -189,7 +189,7 @@ public class PullNestedScrollView extends NestedScrollView {
         int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                XLog.d(true, 1, "dispatchTouchEvent: " + ev.getY());
+                XLog.d(false, 1, "dispatchTouchEvent: " + ev.getY());
                 mStartPoint.set(ev.getX(), ev.getY());
                 FirstTouchY = ev.getY();
                 if (null == mHeaderRect) {
@@ -209,6 +209,16 @@ public class PullNestedScrollView extends NestedScrollView {
                     XLog.d(false, 1, mContentRect.toString());
                 }
                 break;
+            case MotionEvent.ACTION_MOVE:
+                if (getScrollY() > 0) {
+                    /**
+                     * 修复将ScrollView先上滚一段距离
+                     * 然后下拉图片时,会有突变的情形出现
+                     */
+                    mStartPoint.set(ev.getX(), ev.getY());
+                }
+                XLog.d(true, 1, "[1][MOVE], y: " + ev.getY());
+                break;
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -221,7 +231,7 @@ public class PullNestedScrollView extends NestedScrollView {
                 case MotionEvent.ACTION_DOWN:
                     return super.onTouchEvent(ev);
                 case MotionEvent.ACTION_MOVE:
-                    XLog.d(true, 1, "Y: " + ev.getY());
+                    XLog.d(false, 1, "Y: " + ev.getY());
                     float deltaY = ev.getY() - mStartPoint.y;
                     // 确保是纵轴方向
                     // 向下的滑动
@@ -232,7 +242,7 @@ public class PullNestedScrollView extends NestedScrollView {
                         doMoveDown(ev);
                         XLog.d(false, 1, "mStartPoint.y: " + mStartPoint.y + ", deltaY: " + deltaY);
                     } else {
-                        if (deltaY < 0.01f && isMovingDown) {
+                        if (isMovingDown) {
                             /**
                              * 用户正在向下滑动
                              * 然后继续回退准备向上滑动
@@ -242,12 +252,8 @@ public class PullNestedScrollView extends NestedScrollView {
                             rollBackAnimation(false);
                             XLog.d(false, 1, "deltaY < 0.01f && isMovingDown");
                         }
-                        /**
-                         * 修复将ScrollView先上滚一段距离
-                         * 然后下拉图片时,会有突变的情形出现
-                         */
-                        mStartPoint.set(ev.getX(), ev.getY());
                         isMovingDown = false;
+                        XLog.d(true, 1, "[3][MOVE]--, y: " + ev.getY());
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -448,13 +454,13 @@ public class PullNestedScrollView extends NestedScrollView {
     @Override
     public void scrollTo(int x, int y) {
         super.scrollTo(x, y);
-        XLog.d(true, 1, "   y: " + y);
+        XLog.d(false, 1, "   y: " + y);
     }
 
     @Override
     protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
         super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-        XLog.d(true, 1, "****   scrollY: " + scrollY);
+        XLog.d(false, 1, "****   scrollY: " + scrollY);
     }
 
     /**
