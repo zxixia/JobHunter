@@ -4,24 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
 
 import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
-import net.jiawa.jobhunter.base.activities.BaseTitleActivity;
 import net.jiawa.jobhunter.base.activities.BaseTopImageActivity;
 import net.jiawa.jobhunter.base.adapter.BaseGeneralRecyclerAdapter;
 import net.jiawa.jobhunter.base.adapter.BaseRecyclerAdapter;
+import net.jiawa.jobhunter.bean.douban.PopularComments;
 import net.jiawa.jobhunter.bean.douban.Subject;
 import net.jiawa.jobhunter.bean.douban.Subjects;
 import net.jiawa.jobhunter.module.douban.theater.TheaterAdapter;
 import net.jiawa.jobhunter.widgets.MovieStarView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -52,10 +49,13 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
     @Bind(R.id.tv_summary)
     TextView mSummary;
     protected RecyclerView mCasts;
+    @Bind(R.id.rv_popular_comments)
+    RecyclerView mPopularComments;
     Subjects mSubjects;
 
     MovieContract.MoviePresenter mPresenter;
-    BaseRecyclerAdapter<Object> mAdapter;
+    BaseRecyclerAdapter<Object> mCastsAdapter;
+    BaseRecyclerAdapter<PopularComments> mPopularCommentsAdapter;
 
     @Override
     protected int getChildContentViewId() {
@@ -74,7 +74,10 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
         super.initWidget();
 
         mCasts = (RecyclerView) findViewById(R.id.rv_casts);
-        mCasts.setLayoutManager(getLayoutManager());
+        mCasts.setLayoutManager(getLayoutManager(LinearLayoutManager.HORIZONTAL));
+
+        mPopularComments = (RecyclerView) findViewById(R.id.rv_popular_comments);
+        mPopularComments.setLayoutManager(getLayoutManager(LinearLayoutManager.VERTICAL));
     }
 
     @Override
@@ -109,10 +112,14 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
         mPeopleCount.setText(subject.getRatingsCount() + "人");
         mSummary.setText(subject.getSummary().replace("\n", ""));
 
-        mAdapter = new CastsAdapter(this);
-        mCasts.setAdapter(mAdapter);
+        mCastsAdapter = new CastsAdapter(this);
+        mCasts.setAdapter(mCastsAdapter);
+
+        mPopularCommentsAdapter = new PopularCommentsAdapter(this);
+        mPopularComments.setAdapter(mPopularCommentsAdapter);
 
         mPresenter.getCastsList(subject.getCasts(), subject.getDirectors());
+        mPresenter.getPopularComments();
     }
 
     @Override
@@ -123,7 +130,12 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
     @Override
     public void onGetCasts(List<Object> list) {
         XLog.d(true, 1, Arrays.toString(list.toArray()));
-        mAdapter.resetItem(list);
+        mCastsAdapter.resetItem(list);
+    }
+
+    @Override
+    public void onGetPopularComments(List<PopularComments> list) {
+        mPopularCommentsAdapter.resetItem(list);
     }
 
     @Override
@@ -149,9 +161,9 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
         return new Date();
     }
 
-    protected RecyclerView.LayoutManager getLayoutManager() {
+    protected RecyclerView.LayoutManager getLayoutManager(int orientation) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        linearLayoutManager.setOrientation(orientation);
         return linearLayoutManager;
     }
 }

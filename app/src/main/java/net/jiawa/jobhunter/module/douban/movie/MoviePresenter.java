@@ -64,4 +64,9 @@ public class MoviePresenter implements MovieContract.MoviePresenter {
 
         mBasicInfoView.onGetCasts(mCasts);
     }
+
+    @Override
+    public void getPopularComments() {
+        mBasicInfoView.onGetPopularComments(mSubject.getPopularComments());
+    }
 }

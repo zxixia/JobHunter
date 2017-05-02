@@ -8,6 +8,32 @@
     android:paddingRight="9dp"
     android:orientation="vertical"
     android:background="@color/white">
+
+
+    <!-- 评论 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:text="评论"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_popular_comments"
+            android:layout_width="match_parent"
+            android:layout_height="350dp">
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+    <!-- 分割线 -->
+    <View
+        style="@style/sty_horizontal_line"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+    </View>
+
+
     <!-- 顶部的基本信息栏 -->
     <LinearLayout
         android:layout_width="match_parent"
