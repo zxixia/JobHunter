@@ -235,14 +235,12 @@ public class PullNestedScrollView extends NestedScrollView {
         if (mContentView != null) {
             int action = ev.getAction();
             switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                    return super.onTouchEvent(ev);
                 case MotionEvent.ACTION_MOVE:
                     XLog.d(false, 1, "Y: " + ev.getY());
                     float deltaY = ev.getY() - mStartPoint.y;
                     // 确保是纵轴方向
                     // 向下的滑动
-                    if (deltaY > 0 && getScrollY() == 0/*deltaY > 10 && deltaY > Math.abs(ev.getX() - mStartPoint.x)*/) {
+                    if (deltaY > 0 && getScrollY() == 0) {
                         mHeader.clearAnimation();
                         mContentView.clearAnimation();
                         mIsMovingDown = true;
@@ -263,11 +261,7 @@ public class PullNestedScrollView extends NestedScrollView {
                         XLog.d(true, 1, "[3][MOVE]--, y: " + ev.getY());
                     }
                     break;
-                default:
-                    break;
-
             }
-            // XLog.d(false, 1, "state: " + mState + ", mIsMovingDown: " + mIsMovingDown + ", ScrollY: " + getScrollY());
         }
 
         // 禁止控件本身的滑动.
