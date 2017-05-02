@@ -53,12 +53,6 @@ public class PullNestedScrollView extends NestedScrollView {
      * 计算y位移差出现较大的偏差
      * */
     private PointF mStartPoint = new PointF();
-    /**
-     * 用于onInterceptTouchEvent进行判断的变量
-     * 记录从dispatchTouchEvent中记录的初次
-     * 点击位置
-     */
-    private float FirstTouchY;
     /** 是否开始向下移动. */
     private boolean mIsMovingDown = false;
     /** 头部图片拖动时顶部和底部. */
@@ -159,9 +153,8 @@ public class PullNestedScrollView extends NestedScrollView {
         int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_MOVE:
-                final float yDiff = ev.getY() - FirstTouchY;
+                final float yDiff = ev.getY() - mStartPoint.y;
                 if (getScrollY() == 0 && yDiff > 0) {
-                    XLog.d(false, 1, ".................... y: " + ev.getY() + ", FirstTouchY: " + FirstTouchY + ", yDiff: " + yDiff);
                     return true;
                 }
                 break;
@@ -191,7 +184,6 @@ public class PullNestedScrollView extends NestedScrollView {
             case MotionEvent.ACTION_DOWN:
                 XLog.d(false, 1, "dispatchTouchEvent: " + ev.getY());
                 mStartPoint.set(ev.getX(), ev.getY());
-                FirstTouchY = ev.getY();
                 if (null == mHeaderRect) {
                     // 顶部图片最原始的位置信息
                     mHeaderRect = new Rect();
