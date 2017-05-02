@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.animation.TranslateAnimation;
 import android.support.v4.widget.NestedScrollView;
 
@@ -52,6 +53,12 @@ public class PullNestedScrollView extends NestedScrollView {
      * 计算y位移差出现较大的偏差
      * */
     private PointF mStartPoint = new PointF();
+    /**
+     * 用于onInterceptTouchEvent进行判断的变量
+     * 记录从dispatchTouchEvent中记录的初次
+     * 点击位置
+     */
+    private float FirstTouchY;
     /** 是否开始向下移动. */
     private boolean isMovingDown = false;
     /** 头部图片拖动时顶部和底部. */
@@ -62,6 +69,8 @@ public class PullNestedScrollView extends NestedScrollView {
      * 保存顶部图片的最原始的left, top, right, bottom
      *  */
     private Rect mHeaderRect = null;
+
+    private int TouchSlop;
 
     public PullNestedScrollView(Context context) {
         super(context);
@@ -82,9 +91,11 @@ public class PullNestedScrollView extends NestedScrollView {
         // set scroll mode
         setOverScrollMode(OVER_SCROLL_NEVER);
 
+        final ViewConfiguration configuration = ViewConfiguration.get(getContext());
+        TouchSlop = configuration.getScaledTouchSlop();
+
         if (null != attrs) {
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PullNestedScrollView);
-
             if (ta != null) {
                 // mHeaderHeight = (int) ta.getDimension(R.styleable.PullNestedScrollView_headerHeight, -1);
                 mHeaderVisibleHeight = (int) ta.getDimension(R.styleable
@@ -145,6 +156,17 @@ public class PullNestedScrollView extends NestedScrollView {
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_MOVE:
+                final float yDiff = ev.getY() - FirstTouchY;
+                if (getScrollY() == 0 && yDiff > TouchSlop) {
+                    XLog.d(true, 1, ".................... y: " + ev.getY() + ", FirstTouchY: " + FirstTouchY + ", yDiff: " + yDiff);
+                    return true;
+                }
+                break;
+        }
+
         boolean onInterceptTouchEvent = super.onInterceptTouchEvent(ev);
         XLog.d(true, 1, "y: " + ev.getY() + ", onInterceptTouchEvent: " + onInterceptTouchEvent + ", isMovingDown: " + isMovingDown);
         return onInterceptTouchEvent;
@@ -169,6 +191,7 @@ public class PullNestedScrollView extends NestedScrollView {
             case MotionEvent.ACTION_DOWN:
                 XLog.d(true, 1, "dispatchTouchEvent: " + ev.getY());
                 mStartPoint.set(ev.getX(), ev.getY());
+                FirstTouchY = ev.getY();
                 if (null == mHeaderRect) {
                     // 顶部图片最原始的位置信息
                     mHeaderRect = new Rect();
