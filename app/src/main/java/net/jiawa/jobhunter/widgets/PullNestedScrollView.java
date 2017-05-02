@@ -60,7 +60,7 @@ public class PullNestedScrollView extends NestedScrollView {
      */
     private float FirstTouchY;
     /** 是否开始向下移动. */
-    private boolean isMovingDown = false;
+    private boolean mIsMovingDown = false;
     /** 头部图片拖动时顶部和底部. */
     private int mCurrentTop, mCurrentBottom;
     /** 状态变化时的监听器. */
@@ -168,7 +168,7 @@ public class PullNestedScrollView extends NestedScrollView {
         }
 
         boolean onInterceptTouchEvent = super.onInterceptTouchEvent(ev);
-        XLog.d(false, 1, "y: " + ev.getY() + ", onInterceptTouchEvent: " + onInterceptTouchEvent + ", isMovingDown: " + isMovingDown);
+        XLog.d(false, 1, "y: " + ev.getY() + ", onInterceptTouchEvent: " + onInterceptTouchEvent + ", mIsMovingDown: " + mIsMovingDown);
         return onInterceptTouchEvent;
     }
 
@@ -219,6 +219,13 @@ public class PullNestedScrollView extends NestedScrollView {
                 }
                 XLog.d(true, 1, "[1][MOVE], y: " + ev.getY());
                 break;
+            case MotionEvent.ACTION_UP:
+                // 回滚动画
+                if (isNeedAnimation()) {
+                    rollBackAnimation();
+                }
+                mIsMovingDown = false;
+                break;
         }
         return super.dispatchTouchEvent(ev);
     }
@@ -238,11 +245,11 @@ public class PullNestedScrollView extends NestedScrollView {
                     if (deltaY > 0 && getScrollY() == 0/*deltaY > 10 && deltaY > Math.abs(ev.getX() - mStartPoint.x)*/) {
                         mHeader.clearAnimation();
                         mContentView.clearAnimation();
-                        isMovingDown = true;
+                        mIsMovingDown = true;
                         doMoveDown(ev);
                         XLog.d(false, 1, "mStartPoint.y: " + mStartPoint.y + ", deltaY: " + deltaY);
                     } else {
-                        if (isMovingDown) {
+                        if (mIsMovingDown) {
                             /**
                              * 用户正在向下滑动
                              * 然后继续回退准备向上滑动
@@ -250,30 +257,22 @@ public class PullNestedScrollView extends NestedScrollView {
                              * 要将ImageView和ContentView回退到原始的位置
                              */
                             rollBackAnimation(false);
-                            XLog.d(false, 1, "deltaY < 0.01f && isMovingDown");
+                            XLog.d(false, 1, "deltaY < 0.01f && mIsMovingDown");
                         }
-                        isMovingDown = false;
+                        mIsMovingDown = false;
                         XLog.d(true, 1, "[3][MOVE]--, y: " + ev.getY());
                     }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    // 回滚动画
-                    if (isNeedAnimation()) {
-                        rollBackAnimation();
-                    }
-
-                    isMovingDown = false;
                     break;
                 default:
                     break;
 
             }
-            // XLog.d(false, 1, "state: " + mState + ", isMovingDown: " + isMovingDown + ", ScrollY: " + getScrollY());
+            // XLog.d(false, 1, "state: " + mState + ", mIsMovingDown: " + mIsMovingDown + ", ScrollY: " + getScrollY());
         }
 
         // 禁止控件本身的滑动.
-        boolean isHandle = isMovingDown;
-        if (!isMovingDown) {
+        boolean isHandle = mIsMovingDown;
+        if (!mIsMovingDown) {
             try {
                 isHandle = super.onTouchEvent(ev);
             } catch (Exception e) {
@@ -448,7 +447,7 @@ public class PullNestedScrollView extends NestedScrollView {
      * 是否需要开启动画
      */
     private boolean isNeedAnimation() {
-        return !mContentRect.isEmpty() && isMovingDown && getScrollY() == 0;
+        return !mContentRect.isEmpty() && mIsMovingDown && getScrollY() == 0;
     }
 
     @Override
@@ -481,10 +480,10 @@ public class PullNestedScrollView extends NestedScrollView {
      *
      *
      [  170][dispatchTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][dispatchTouchEvent: 1237.0]
-     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1237.0, onInterceptTouchEvent: false, isMovingDown: false]
-     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1245.2056, onInterceptTouchEvent: false, isMovingDown: false]
-     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1258.9221, onInterceptTouchEvent: false, isMovingDown: false]
-     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1276.4095, onInterceptTouchEvent: true, isMovingDown: false]
+     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1237.0, onInterceptTouchEvent: false, mIsMovingDown: false]
+     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1245.2056, onInterceptTouchEvent: false, mIsMovingDown: false]
+     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1258.9221, onInterceptTouchEvent: false, mIsMovingDown: false]
+     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1276.4095, onInterceptTouchEvent: true, mIsMovingDown: false]
      [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1307.2354]
      [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1331.1896]
      [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1356.1062]
