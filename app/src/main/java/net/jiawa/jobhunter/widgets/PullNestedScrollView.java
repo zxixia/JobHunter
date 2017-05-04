@@ -176,7 +176,7 @@ public class PullNestedScrollView extends NestedScrollView {
                 super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
             }
         }
-        XLog.d(true, 1, "dyConsumed: " + dyConsumed + ", dyUnconsumed: " + dyUnconsumed);
+        XLog.d(false, 1, "dyConsumed: " + dyConsumed + ", dyUnconsumed: " + dyUnconsumed);
     }
 
     @Override
@@ -193,8 +193,7 @@ public class PullNestedScrollView extends NestedScrollView {
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        XLog.d(true, 1, "onInterceptTouchEvent: " + Debug.getMotionEvent(ev) + ", y: " + ev.getY());
-        int action = ev.getAction();
+        /*int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_MOVE:
                 final float yDiff = ev.getY() - mStartPoint.y;
@@ -202,9 +201,15 @@ public class PullNestedScrollView extends NestedScrollView {
                     return false;
                 }
                 break;
-        }
+        }*/
 
         boolean onInterceptTouchEvent = super.onInterceptTouchEvent(ev);
+        XLog.d(true, 1, "onInterceptTouchEvent: " + Debug.getMotionEvent(ev) + ", y: " + ev.getY() + ", " + onInterceptTouchEvent);
+        final float yDiff = ev.getY() - mStartPoint.y;
+        if(onInterceptTouchEvent && getScrollY() == 0 && yDiff > 0) {
+            XLog.d(true, 1, "-------------------- " + yDiff);
+            mStartPoint.set(ev.getX(), ev.getY());
+        }
         return onInterceptTouchEvent;
     }
 
@@ -317,7 +322,7 @@ public class PullNestedScrollView extends NestedScrollView {
     private void doMoveDown(float deltaY) {
 
         // float deltaY = event.getY() - mStartPoint.y;
-        XLog.d(true, 1, "getScrollY(): " + getScrollY() + ", deltaY: " +deltaY);
+        XLog.d(false, 1, "getScrollY(): " + getScrollY() + ", deltaY: " +deltaY);
 
         // 不要越界
         // 最小是0， 最大是顶部图片的高度
