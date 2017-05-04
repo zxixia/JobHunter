@@ -236,7 +236,7 @@ public class PullNestedScrollView extends NestedScrollView {
                         mHeader.clearAnimation();
                         mContentView.clearAnimation();
                         mIsMovingDown = true;
-                        doMoveDown(ev);
+                        doMoveDown(ev.getY() - mStartPoint.y);
                         XLog.d(false, 1, "mStartPoint.y: " + mStartPoint.y + ", deltaY: " + deltaY);
                     } else {
                         if (mIsMovingDown) {
@@ -271,11 +271,11 @@ public class PullNestedScrollView extends NestedScrollView {
     /**
      * 执行移动动画
      *
-     * @param event
+     * @param
      */
-    private void doMoveDown(MotionEvent event) {
+    private void doMoveDown(float deltaY) {
 
-        float deltaY = event.getY() - mStartPoint.y;
+        // float deltaY = event.getY() - mStartPoint.y;
         XLog.d(false, 1, "getScrollY(): " + getScrollY() + ", deltaY: " +deltaY);
 
         // 不要越界
