@@ -169,7 +169,7 @@ public class PullNestedScrollView extends NestedScrollView {
             mNestedScrollDeltaY = mNestedScrollDeltaY + Math.abs(dyUnconsumed);
             doMoveDown(mNestedScrollDeltaY);
         } else {
-            if (mNestedScrollDeltaY >=0 ) {
+            if (mNestedScrollDeltaY >0 ) {
                 mNestedScrollDeltaY = mNestedScrollDeltaY - Math.abs(dyUnconsumed);
                 doMoveDown(mNestedScrollDeltaY);
             } else {
@@ -181,6 +181,7 @@ public class PullNestedScrollView extends NestedScrollView {
 
     @Override
     public void onStopNestedScroll(View target) {
+        mNestedScrollDeltaY = 0;
         super.onStopNestedScroll(target);
     }
 
