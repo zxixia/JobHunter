@@ -14,6 +14,7 @@ import android.support.v4.widget.NestedScrollView;
 
 import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
+import net.jiawa.jobhunter.helper.Debug;
 
 /**
  * Created by zhaoxin5 on 2017/4/21.
@@ -141,6 +142,48 @@ public class PullNestedScrollView extends NestedScrollView {
         }
     }
 
+    @Override
+    public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        super.requestDisallowInterceptTouchEvent(disallowIntercept);
+        XLog.d(true, 1, "requestDisallowInterceptTouchEvent: " + disallowIntercept);
+    }
+
+    float mNestedScrollDeltaY = 0;
+    @Override
+    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
+        mNestedScrollDeltaY = 0;
+        return super.onStartNestedScroll(child, target, nestedScrollAxes);
+    }
+
+    /***
+     * 针对嵌套了垂直滚动的RecyclerView的情形
+     * @param target
+     * @param dxConsumed
+     * @param dyConsumed
+     * @param dxUnconsumed
+     * @param dyUnconsumed
+     */
+    @Override
+    public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
+        if (dyUnconsumed < 0 && getScrollY() == 0) {
+            mNestedScrollDeltaY = mNestedScrollDeltaY + Math.abs(dyUnconsumed);
+            doMoveDown(mNestedScrollDeltaY);
+        } else {
+            if (mNestedScrollDeltaY >=0 ) {
+                mNestedScrollDeltaY = mNestedScrollDeltaY - Math.abs(dyUnconsumed);
+                doMoveDown(mNestedScrollDeltaY);
+            } else {
+                super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
+            }
+        }
+        XLog.d(true, 1, "dyConsumed: " + dyConsumed + ", dyUnconsumed: " + dyUnconsumed);
+    }
+
+    @Override
+    public void onStopNestedScroll(View target) {
+        super.onStopNestedScroll(target);
+    }
+
     /***
      *
      * 不对这里进行特殊的拦截
@@ -150,18 +193,18 @@ public class PullNestedScrollView extends NestedScrollView {
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        XLog.d(true, 1, "onInterceptTouchEvent: " + Debug.getMotionEvent(ev) + ", y: " + ev.getY());
         int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_MOVE:
                 final float yDiff = ev.getY() - mStartPoint.y;
                 if (getScrollY() == 0 && yDiff > 0) {
-                    return true;
+                    return false;
                 }
                 break;
         }
 
         boolean onInterceptTouchEvent = super.onInterceptTouchEvent(ev);
-        XLog.d(false, 1, "y: " + ev.getY() + ", onInterceptTouchEvent: " + onInterceptTouchEvent + ", mIsMovingDown: " + mIsMovingDown);
         return onInterceptTouchEvent;
     }
 
@@ -209,7 +252,7 @@ public class PullNestedScrollView extends NestedScrollView {
                      */
                     mStartPoint.set(ev.getX(), ev.getY());
                 }
-                XLog.d(true, 1, "[1][MOVE], y: " + ev.getY());
+                XLog.d(false, 1, "[1][MOVE], y: " + ev.getY());
                 break;
             case MotionEvent.ACTION_UP:
                 // 回滚动画
@@ -237,7 +280,6 @@ public class PullNestedScrollView extends NestedScrollView {
                         mContentView.clearAnimation();
                         mIsMovingDown = true;
                         doMoveDown(ev.getY() - mStartPoint.y);
-                        XLog.d(false, 1, "mStartPoint.y: " + mStartPoint.y + ", deltaY: " + deltaY);
                     } else {
                         if (mIsMovingDown) {
                             /**
@@ -247,10 +289,9 @@ public class PullNestedScrollView extends NestedScrollView {
                              * 要将ImageView和ContentView回退到原始的位置
                              */
                             rollBackAnimation(false);
-                            XLog.d(false, 1, "deltaY < 0.01f && mIsMovingDown");
                         }
                         mIsMovingDown = false;
-                        XLog.d(true, 1, "[3][MOVE]--, y: " + ev.getY());
+                        XLog.d(false, 1, "[3][MOVE]--, y: " + ev.getY());
                     }
                     break;
             }
@@ -276,7 +317,7 @@ public class PullNestedScrollView extends NestedScrollView {
     private void doMoveDown(float deltaY) {
 
         // float deltaY = event.getY() - mStartPoint.y;
-        XLog.d(false, 1, "getScrollY(): " + getScrollY() + ", deltaY: " +deltaY);
+        XLog.d(true, 1, "getScrollY(): " + getScrollY() + ", deltaY: " +deltaY);
 
         // 不要越界
         // 最小是0， 最大是顶部图片的高度
@@ -433,7 +474,7 @@ public class PullNestedScrollView extends NestedScrollView {
      * 是否需要开启动画
      */
     private boolean isNeedAnimation() {
-        return !mContentRect.isEmpty() && mIsMovingDown && getScrollY() == 0;
+        return !mContentRect.isEmpty() && (mIsMovingDown || mNestedScrollDeltaY > 0) && getScrollY() == 0;
     }
 
     @Override
