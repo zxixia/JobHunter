@@ -62,10 +62,8 @@ public class PullNestedScrollView extends NestedScrollView {
     private OnTurnListener mOnTurnListener;
     /**
      * 保存顶部图片的最原始的left, top, right, bottom
-     *  */
+     */
     private Rect mHeaderRect = null;
-
-    private int TouchSlop;
 
     public PullNestedScrollView(Context context) {
         super(context);
@@ -86,16 +84,11 @@ public class PullNestedScrollView extends NestedScrollView {
         // set scroll mode
         setOverScrollMode(OVER_SCROLL_NEVER);
 
-        final ViewConfiguration configuration = ViewConfiguration.get(getContext());
-        TouchSlop = configuration.getScaledTouchSlop();
-
         if (null != attrs) {
             TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PullNestedScrollView);
             if (ta != null) {
-                // mHeaderHeight = (int) ta.getDimension(R.styleable.PullNestedScrollView_headerHeight, -1);
                 mHeaderVisibleHeight = (int) ta.getDimension(R.styleable
                         .PullNestedScrollView_headerVisibleHeight, -1);
-
                 ta.recycle();
             }
         }
@@ -152,63 +145,116 @@ public class PullNestedScrollView extends NestedScrollView {
     @Override
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
         mNestedScrollDeltaY = 0;
+        XLog.d(true, 1);
         return super.onStartNestedScroll(child, target, nestedScrollAxes);
     }
 
-    /***
-     * 针对嵌套了垂直滚动的RecyclerView的情形
-     * @param target
-     * @param dxConsumed
-     * @param dyConsumed
-     * @param dxUnconsumed
-     * @param dyUnconsumed
+    /****
+     *
+     * 针对的是内嵌垂直的Nested子View，它会抢占Touch事件,然后通过requestDisallowInterceptTouchEvent
+     * 阻止当前View进入onInterceptTouchEvent，此时当前View无法响应onTouch
+     * 只能通过子View将多余的touch量从onNestedScroll传递回来
+     *
+     [  200][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][DOWN: false, y: 548.7142, ]
+     [  155][onStartNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView]
+     [  200][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][MOVE: false, y: 556.71, ]
+     [  200][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][MOVE: false, y: 564.31885, ]
+     [  200][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][MOVE: false, y: 569.4789, ]
+     [  200][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][MOVE: false, y: 577.67615, ]
+     [  200][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][MOVE: false, y: 587.59784, ]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -15, dyUnconsumed: 0]
+     [  148][requestDisallowInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][requestDisallowInterceptTouchEvent: true]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -9, dyUnconsumed: 0]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -15, dyUnconsumed: 0]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -14, dyUnconsumed: 0]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -15, dyUnconsumed: 0]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -13, dyUnconsumed: 0]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -13, dyUnconsumed: 0]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -15, dyUnconsumed: 0]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -16, dyUnconsumed: 0]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -17, dyUnconsumed: 0]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -15, dyUnconsumed: 0]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: -3, dyUnconsumed: -13]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -18]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -17]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -17]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -17]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -16]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -21]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -20]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -21]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -18]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -23]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -21]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -20]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -20]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -20]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -19]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -18]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -16]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -13]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -13]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -12]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -10]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -9]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -8]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -7]
+     [  180][onNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView][dyConsumed: 0, dyUnconsumed: -1]
+     [  186][onStopNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView]
+     *
      */
     @Override
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         if (dyUnconsumed < 0 && getScrollY() == 0) {
+            // 这是往下滑的情形
             mNestedScrollDeltaY = mNestedScrollDeltaY + Math.abs(dyUnconsumed);
             doMoveDown(mNestedScrollDeltaY);
         } else {
             if (mNestedScrollDeltaY >0 ) {
+                /**
+                 * 这是往下滑然后又
+                 * 回滚的情形
+                 */
                 mNestedScrollDeltaY = mNestedScrollDeltaY - Math.abs(dyUnconsumed);
                 doMoveDown(mNestedScrollDeltaY);
             } else {
                 super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
             }
         }
-        XLog.d(false, 1, "dyConsumed: " + dyConsumed + ", dyUnconsumed: " + dyUnconsumed);
+        XLog.d(true, 1, "dyConsumed: " + dyConsumed + ", dyUnconsumed: " + dyUnconsumed);
     }
 
     @Override
     public void onStopNestedScroll(View target) {
         mNestedScrollDeltaY = 0;
+        XLog.d(true, 1);
         super.onStopNestedScroll(target);
     }
 
     /***
      *
-     * 不对这里进行特殊的拦截
+     * 针对的是嵌套横向的NestedView的情形
+     * 会一直进入当前View的onInterceptTouchEvent，直到满足了拦截条件，
+     * 拦截，然后进入当前View的onTouch事件
+     * 同时注意要将mStartPoint的坐标重置，而且只会进一次，
+     * onInterceptTouchEvent返回true以后，将不会再次进入这个方法
      *
-     * @param ev
-     * @return
+     [  259][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][DOWN: false, y: 1209.3701, ]
+     [  155][onStartNestedScroll][net.jiawa.jobhunter.widgets.PullNestedScrollView]
+     [  259][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][MOVE: false, y: 1226.1425, ]
+     [  259][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][MOVE: true, y: 1249.9808, ]
+     [  331][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1287.947]
+     [  331][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1328.0593]
+     [  331][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1378.5145]
+     *
+     *
      */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        /*int action = ev.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_MOVE:
-                final float yDiff = ev.getY() - mStartPoint.y;
-                if (getScrollY() == 0 && yDiff > 0) {
-                    return false;
-                }
-                break;
-        }*/
-
         boolean onInterceptTouchEvent = super.onInterceptTouchEvent(ev);
-        XLog.d(true, 1, "onInterceptTouchEvent: " + Debug.getMotionEvent(ev) + ", y: " + ev.getY() + ", " + onInterceptTouchEvent);
+        XLog.d(true, 1, Debug.getMotionEvent(ev) + ": " + onInterceptTouchEvent + ", y: " + ev.getY() + ", ");
         final float yDiff = ev.getY() - mStartPoint.y;
         if(onInterceptTouchEvent && getScrollY() == 0 && yDiff > 0) {
-            XLog.d(true, 1, "-------------------- " + yDiff);
             mStartPoint.set(ev.getX(), ev.getY());
         }
         return onInterceptTouchEvent;
@@ -258,7 +304,6 @@ public class PullNestedScrollView extends NestedScrollView {
                      */
                     mStartPoint.set(ev.getX(), ev.getY());
                 }
-                XLog.d(false, 1, "[1][MOVE], y: " + ev.getY());
                 break;
             case MotionEvent.ACTION_UP:
                 // 回滚动画
@@ -322,12 +367,11 @@ public class PullNestedScrollView extends NestedScrollView {
      */
     private void doMoveDown(float deltaY) {
 
-        // float deltaY = event.getY() - mStartPoint.y;
         XLog.d(false, 1, "getScrollY(): " + getScrollY() + ", deltaY: " +deltaY);
-
-        // 不要越界
-        // 最小是0， 最大是顶部图片的高度
         /***
+         *
+         * 不要越界
+         * 最小是0， 最大是顶部图片的高度
          *
          * deltaY 只能分一半给顶部的imageview的top值
          * 同时这个一半还需要乘以一个阻尼系数SCROLL_RATIO
@@ -483,18 +527,6 @@ public class PullNestedScrollView extends NestedScrollView {
         return !mContentRect.isEmpty() && (mIsMovingDown || mNestedScrollDeltaY > 0) && getScrollY() == 0;
     }
 
-    @Override
-    public void scrollTo(int x, int y) {
-        super.scrollTo(x, y);
-        XLog.d(false, 1, "   y: " + y);
-    }
-
-    @Override
-    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
-        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
-        XLog.d(false, 1, "****   scrollY: " + scrollY);
-    }
-
     /**
      * 翻转事件监听器
      *
@@ -506,89 +538,4 @@ public class PullNestedScrollView extends NestedScrollView {
          */
         public void onTurn();
     }
-
-
-    /**
-     *
-     *
-     *
-     [  170][dispatchTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][dispatchTouchEvent: 1237.0]
-     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1237.0, onInterceptTouchEvent: false, mIsMovingDown: false]
-     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1245.2056, onInterceptTouchEvent: false, mIsMovingDown: false]
-     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1258.9221, onInterceptTouchEvent: false, mIsMovingDown: false]
-     [  149][onInterceptTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][y: 1276.4095, onInterceptTouchEvent: true, mIsMovingDown: false]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1307.2354]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1331.1896]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1356.1062]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1384.5074]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1406.2168]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1427.0698]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1441.1742]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1462.5365]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1482.4337]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1499.0128]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1511.8423]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1526.7844]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1544.4924]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1558.532]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1577.6796]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1590.9167]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1603.6583]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1612.8148]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1625.1334]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1636.46]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1645.2489]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1650.9336]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1656.3372]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1659.4869]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1662.7518]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1666.001]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1668.633]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1671.5255]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1673.8933]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1676.5237]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1678.151]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1679.7804]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1681.4154]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1681.0]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1677.5437]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1666.473]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1646.0253]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1619.888]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1595.6139]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1572.7375]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1540.1705]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1520.7085]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1503.5487]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1485.2524]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1462.1482]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1445.871]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1429.3323]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1408.5646]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1394.7302]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1377.727]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1364.8948]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1351.8595]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1342.0438]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1332.0367]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1323.4875]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1314.3314]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1303.8839]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1289.7837]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1277.9354]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1269.6835]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1260.836]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1252.4127]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1247.202]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1240.2489]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1234.1461]
-     [  128][onScrollChanged][net.jiawa.jobhunter.widgets.PullNestedScrollView][scrollY: 42]
-     [  434][onOverScrolled][net.jiawa.jobhunter.widgets.PullNestedScrollView][****   scrollY: 42]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1226.7917]
-     [  128][onScrollChanged][net.jiawa.jobhunter.widgets.PullNestedScrollView][scrollY: 50]
-     [  434][onOverScrolled][net.jiawa.jobhunter.widgets.PullNestedScrollView][****   scrollY: 50]
-     [  201][onTouchEvent][net.jiawa.jobhunter.widgets.PullNestedScrollView][Y: 1220.1495]
-     *
-     *
-     */
 }
