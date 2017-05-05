@@ -7,6 +7,7 @@ import net.jiawa.jobhunter.base.mvp.view.BaseView;
 import net.jiawa.jobhunter.bean.douban.Casts;
 import net.jiawa.jobhunter.bean.douban.Directors;
 import net.jiawa.jobhunter.bean.douban.PopularComments;
+import net.jiawa.jobhunter.bean.douban.PopularReviews;
 import net.jiawa.jobhunter.bean.douban.Subject;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class MovieContract {
         void getSubject(String id);
         void getCastsList(List<Casts> casts, List<Directors> directorses);
         void getPopularComments();
+        void getPopularReviews();
     }
 
     interface BasicInfoView extends BaseView<MoviePresenter> {
@@ -27,5 +29,6 @@ public class MovieContract {
         void onGetSubjectFailed();
         void onGetCasts(List<Object> list);
         void onGetPopularComments(List<PopularComments> list);
+        void onGetPopularReviews(List<PopularReviews> list);
     }
 }

@@ -16,6 +16,7 @@ import net.jiawa.jobhunter.base.adapter.BaseRecyclerAdapter;
 import net.jiawa.jobhunter.bean.douban.Casts;
 import net.jiawa.jobhunter.bean.douban.Directors;
 import net.jiawa.jobhunter.bean.douban.PopularComments;
+import net.jiawa.jobhunter.bean.douban.PopularReviews;
 import net.jiawa.jobhunter.bean.douban.Subject;
 import net.jiawa.jobhunter.bean.douban.Subjects;
 import net.jiawa.jobhunter.module.douban.theater.TheaterAdapter;
@@ -53,14 +54,18 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
     protected RecyclerView mCasts;
     @Bind(R.id.rv_popular_comments)
     RecyclerView mPopularComments;
+    @Bind(R.id.rv_popular_reviews)
+    RecyclerView mPopularReviews;
     Subjects mSubjects;
 
     MovieContract.MoviePresenter mPresenter;
     BaseRecyclerAdapter<Object> mCastsAdapter;
     BaseRecyclerAdapter<PopularComments> mPopularCommentsAdapter;
+    BaseRecyclerAdapter<PopularReviews> mPopularReviewsAdapter;
 
     private List<Object> mCastsList;
-    List<PopularComments> mPopularCommentsList;
+    private List<PopularComments> mPopularCommentsList;
+    private List<PopularReviews> mPopularReviewsList;
 
     @Override
     protected int getChildContentViewId() {
@@ -83,6 +88,9 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
 
         mPopularComments = (RecyclerView) findViewById(R.id.rv_popular_comments);
         mPopularComments.setLayoutManager(getLayoutManager(LinearLayoutManager.VERTICAL));
+
+        mPopularReviews = (RecyclerView) findViewById(R.id.rv_popular_reviews);
+        mPopularReviews.setLayoutManager(getLayoutManager(LinearLayoutManager.VERTICAL));
     }
 
     @Override
@@ -125,8 +133,16 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
         mPopularCommentsAdapter.setOnItemClickListener(mPopularCommentsClickListener);
         mPopularComments.setAdapter(mPopularCommentsAdapter);
 
+        mPopularReviewsAdapter = new PopularReviewsAdapter(this);
+        mPopularReviews.setAdapter(mPopularReviewsAdapter);
+
         mPresenter.getCastsList(subject.getCasts(), subject.getDirectors());
         mPresenter.getPopularComments();
+        mPresenter.getPopularReviews();
+
+        XLog.d(true, 1, "PopularReviews: " + subject.getPopularReviews().size() +
+                ", PopularComments: " + subject.getPopularComments().size() +
+                ", Tags: " + subject.getTags().size());
     }
 
     @Override
@@ -145,6 +161,12 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
     public void onGetPopularComments(List<PopularComments> list) {
         mPopularCommentsList = list;
         mPopularCommentsAdapter.resetItem(mPopularCommentsList);
+    }
+
+    @Override
+    public void onGetPopularReviews(List<PopularReviews> list) {
+        mPopularReviewsList = list;
+        mPopularReviewsAdapter.resetItem(mPopularReviewsList);
     }
 
     @Override

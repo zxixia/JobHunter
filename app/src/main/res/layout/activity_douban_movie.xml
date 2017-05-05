@@ -89,7 +89,8 @@
     <View
         style="@style/sty_horizontal_line"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"></View>
+        android:layout_marginTop="5dp">
+    </View>
 
 
     <!-- 简介 -->
@@ -131,7 +132,8 @@
     <View
         style="@style/sty_horizontal_line"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"></View>
+        android:layout_marginTop="5dp">
+    </View>
 
     <!-- 影人 -->
     <LinearLayout
@@ -158,9 +160,10 @@
     <View
         style="@style/sty_horizontal_line"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"></View>
+        android:layout_marginTop="5dp">
+    </View>
 
-    <!-- 评论 -->
+    <!-- 热门短评 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -171,16 +174,44 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginBottom="3dp"
-            android:text="评论" />
+            android:text="热门短评" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_popular_comments"
             android:layout_width="match_parent"
-            android:layout_height="180dp"></android.support.v7.widget.RecyclerView>
+            android:layout_height="180dp">
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
     <!-- 分割线 -->
     <View
         style="@style/sty_horizontal_line"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"></View>
+        android:layout_marginTop="5dp">
+    </View>
+
+    <!-- 热门评论 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginBottom="3dp"
+            android:text="热门影评" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_popular_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="220dp">
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+    <!-- 分割线 -->
+    <View
+        style="@style/sty_horizontal_line"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
+    </View>
 </LinearLayout>

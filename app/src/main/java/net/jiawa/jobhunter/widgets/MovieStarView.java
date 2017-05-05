@@ -181,6 +181,7 @@ public class MovieStarView extends View {
             y = mStarBitmap.getHeight() - height;
         }
 
+        XLog.d(true, 1, "x: " + x + ", y: " + y + ", width: " + width + ", height: " + height);
         mCurrentStartBitmap = Bitmap.createBitmap(mStarBitmap, x, y, width, height, matrix, false);
     }
 
