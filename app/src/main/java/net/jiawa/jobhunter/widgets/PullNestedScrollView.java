@@ -124,28 +124,58 @@ public class PullNestedScrollView extends NestedScrollView {
                                    int oldScrollX, int oldScrollY) {
         super.onScrollChanged(scrollX, scrollY, oldScrollX, oldScrollY);
 
-        XLog.d(false, 1, "scrollY: " + scrollY);
+        XLog.d(true, 1, "scrollY: " + scrollY);
         final int originalTop = mHeaderRect.top;
         final int maxMove = (int) (Math.abs(originalTop) / 0.5f / SCROLL_RATIO);
         if (0 <= scrollY && scrollY <= maxMove) {
             // 在此范围内
             // 上滑ScrollView,会把顶部的图片也滑动上去
-            mHeader.layout(mHeaderRect.left, mHeaderRect.top - scrollY,
-                             mHeaderRect.right, mHeaderRect.bottom - scrollY);
+            /*mHeader.layout(mHeaderRect.left, mHeaderRect.top - scrollY,
+                             mHeaderRect.right, mHeaderRect.bottom - scrollY);*/
+            /***
+             *
+             * 如果使用layout方式，会有一个bug，
+             * 1，将整个上滑一点
+             * 2，滑动横向RecyclerView
+             * 3，然后顶部的header会突变一下，调用log如下
+             *
+             [  107][onLayoutChange][net.jiawa.jobhunter.widgets.PullNestedScrollView$1]
+             [17532][layout][android.view.View]
+             [ 1079][onLayout][android.widget.RelativeLayout]
+             [17523][layout][android.view.View]
+             [ 5618][layout][android.view.ViewGroup]
+             [  323][layoutChildren][android.widget.FrameLayout]
+             [  261][onLayout][android.widget.FrameLayout]
+             [17523][layout][android.view.View]
+             [ 5618][layout][android.view.ViewGroup]
+             [ 1741][setChildFrame][android.widget.LinearLayout]
+             [ 1585][layoutVertical][android.widget.LinearLayout]
+             [ 1494][onLayout][android.widget.LinearLayout]
+             [17523][layout][android.view.View]
+             [ 5618][layout][android.view.ViewGroup]
+             [  323][layoutChildren][android.widget.FrameLayout]
+             [  261][onLayout][android.widget.FrameLayout]
+             [17523][layout][android.view.View]
+             [ 5618][layout][android.view.ViewGroup]
+             [ 1741][setChildFrame][android.widget.LinearLayout]
+             [ 1585][layoutVertical][android.widget.LinearLayout]
+             *
+             */
+            mHeader.scrollTo(0, scrollY);
         }
     }
 
     @Override
     public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
         super.requestDisallowInterceptTouchEvent(disallowIntercept);
-        XLog.d(true, 1, "requestDisallowInterceptTouchEvent: " + disallowIntercept);
+        XLog.d(false, 1, "requestDisallowInterceptTouchEvent: " + disallowIntercept);
     }
 
     float mNestedScrollDeltaY = 0;
     @Override
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
         mNestedScrollDeltaY = 0;
-        XLog.d(true, 1);
+        XLog.d(false, 1);
         return super.onStartNestedScroll(child, target, nestedScrollAxes);
     }
 
@@ -221,13 +251,13 @@ public class PullNestedScrollView extends NestedScrollView {
                 super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
             }
         }
-        XLog.d(true, 1, "dyConsumed: " + dyConsumed + ", dyUnconsumed: " + dyUnconsumed);
+        XLog.d(false, 1, "dyConsumed: " + dyConsumed + ", dyUnconsumed: " + dyUnconsumed);
     }
 
     @Override
     public void onStopNestedScroll(View target) {
         mNestedScrollDeltaY = 0;
-        XLog.d(true, 1);
+        XLog.d(false, 1);
         super.onStopNestedScroll(target);
     }
 
@@ -252,7 +282,7 @@ public class PullNestedScrollView extends NestedScrollView {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         boolean onInterceptTouchEvent = super.onInterceptTouchEvent(ev);
-        XLog.d(true, 1, Debug.getMotionEvent(ev) + ": " + onInterceptTouchEvent + ", y: " + ev.getY() + ", ");
+        XLog.d(false, 1, Debug.getMotionEvent(ev) + ": " + onInterceptTouchEvent + ", y: " + ev.getY() + ", ");
         final float yDiff = ev.getY() - mStartPoint.y;
         if(onInterceptTouchEvent && getScrollY() == 0 && yDiff > 0) {
             mStartPoint.set(ev.getX(), ev.getY());
@@ -327,6 +357,7 @@ public class PullNestedScrollView extends NestedScrollView {
                     // 确保是纵轴方向
                     // 向下的滑动
                     if (deltaY > 0 && getScrollY() == 0) {
+                        XLog.d(false, 1, "deltayY: " + (ev.getY() - mStartPoint.y));
                         mHeader.clearAnimation();
                         mContentView.clearAnimation();
                         mIsMovingDown = true;
