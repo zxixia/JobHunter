@@ -2,7 +2,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:layout_marginTop="5dp">
     <TextView
         android:id="@+id/tv_author"
         android:layout_width="wrap_content"
@@ -18,7 +20,7 @@
     <TextView
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/tv_author"
-        android:lines="3"/>
+        android:layout_marginTop="3dp"/>
 </RelativeLayout>
