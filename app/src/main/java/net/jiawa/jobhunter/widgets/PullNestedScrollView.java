@@ -124,7 +124,7 @@ public class PullNestedScrollView extends NestedScrollView {
                                    int oldScrollX, int oldScrollY) {
         super.onScrollChanged(scrollX, scrollY, oldScrollX, oldScrollY);
 
-        XLog.d(true, 1, "scrollY: " + scrollY);
+        XLog.d(false, 1, "scrollY: " + scrollY);
         final int originalTop = mHeaderRect.top;
         final int maxMove = (int) (Math.abs(originalTop) / 0.5f / SCROLL_RATIO);
         if (0 <= scrollY && scrollY <= maxMove) {

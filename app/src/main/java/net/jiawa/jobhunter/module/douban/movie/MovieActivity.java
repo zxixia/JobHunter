@@ -13,6 +13,8 @@ import net.jiawa.jobhunter.R;
 import net.jiawa.jobhunter.base.activities.BaseTopImageActivity;
 import net.jiawa.jobhunter.base.adapter.BaseGeneralRecyclerAdapter;
 import net.jiawa.jobhunter.base.adapter.BaseRecyclerAdapter;
+import net.jiawa.jobhunter.bean.douban.Casts;
+import net.jiawa.jobhunter.bean.douban.Directors;
 import net.jiawa.jobhunter.bean.douban.PopularComments;
 import net.jiawa.jobhunter.bean.douban.Subject;
 import net.jiawa.jobhunter.bean.douban.Subjects;
@@ -56,6 +58,9 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
     MovieContract.MoviePresenter mPresenter;
     BaseRecyclerAdapter<Object> mCastsAdapter;
     BaseRecyclerAdapter<PopularComments> mPopularCommentsAdapter;
+
+    private List<Object> mCastsList;
+    List<PopularComments> mPopularCommentsList;
 
     @Override
     protected int getChildContentViewId() {
@@ -113,9 +118,11 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
         mSummary.setText(subject.getSummary().replace("\n", ""));
 
         mCastsAdapter = new CastsAdapter(this);
+        mCastsAdapter.setOnItemClickListener(mCastsClickListener);
         mCasts.setAdapter(mCastsAdapter);
 
         mPopularCommentsAdapter = new PopularCommentsAdapter(this);
+        mPopularCommentsAdapter.setOnItemClickListener(mPopularCommentsClickListener);
         mPopularComments.setAdapter(mPopularCommentsAdapter);
 
         mPresenter.getCastsList(subject.getCasts(), subject.getDirectors());
@@ -130,12 +137,14 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
     @Override
     public void onGetCasts(List<Object> list) {
         XLog.d(true, 1, Arrays.toString(list.toArray()));
-        mCastsAdapter.resetItem(list);
+        mCastsList = list;
+        mCastsAdapter.resetItem(mCastsList);
     }
 
     @Override
     public void onGetPopularComments(List<PopularComments> list) {
-        mPopularCommentsAdapter.resetItem(list);
+        mPopularCommentsList = list;
+        mPopularCommentsAdapter.resetItem(mPopularCommentsList);
     }
 
     @Override
@@ -166,4 +175,26 @@ public class MovieActivity extends BaseTopImageActivity implements MovieContract
         linearLayoutManager.setOrientation(orientation);
         return linearLayoutManager;
     }
+
+
+    BaseRecyclerAdapter.OnItemClickListener mCastsClickListener = new BaseRecyclerAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(int position, long itemId) {
+            Object o = mCastsList.get(position);
+            if (o instanceof Directors) {
+                XLog.d(true, 1, position + ", " + ((Directors) o).getNameEn());
+            }
+            if (o instanceof Casts) {
+                XLog.d(true, 1, position + ", " + ((Casts) o).getNameEn());
+            }
+        }
+    };
+
+    BaseRecyclerAdapter.OnItemClickListener mPopularCommentsClickListener = new BaseRecyclerAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(int position, long itemId) {
+            PopularComments p = mPopularCommentsList.get(position);
+            XLog.d(true, 1, position + ", " + p.getCreatedAt());
+        }
+    };
 }
