@@ -35,7 +35,7 @@ public class PopularReviewsAdapter extends BaseRecyclerAdapter<PopularReviews> {
         h.author.setText(item.getAuthor().getName());
         h.content.setText(item.getSummary());
         h.title.setText("《" + item.getTitle() + "》");
-        // h.starView.setStars(25);
+        h.starView.setStars(25);
         if (position == getItemCount() - 1) {
             h.dividerLine.setVisibility(View.GONE);
         }
@@ -47,7 +47,7 @@ public class PopularReviewsAdapter extends BaseRecyclerAdapter<PopularReviews> {
         TextView author;
         TextView title;
         TextView content;
-        // MovieStarView starView;
+        MovieStarView starView;
         View dividerLine;
 
         public PopularReviewsViewHolder(View itemView) {
@@ -55,7 +55,7 @@ public class PopularReviewsAdapter extends BaseRecyclerAdapter<PopularReviews> {
             author = (TextView) itemView.findViewById(R.id.tv_author);
             content = (TextView) itemView.findViewById(R.id.tv_content);
             title = (TextView) itemView.findViewById(R.id.tv_title);
-            // starView = (MovieStarView) itemView.findViewById(R.id.ms_stars);
+            starView = (MovieStarView) itemView.findViewById(R.id.ms_stars);
             dividerLine = itemView.findViewById(R.id.v_divider_line);
         }
     }

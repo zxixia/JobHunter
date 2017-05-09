@@ -18,18 +18,23 @@
         android:layout_height="20dp"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/tv_title"/>
-    <!--<net.jiawa.jobhunter.widgets.MovieStarView
+    <!--
+        这里要指定高度和宽度
+        直接用wrap_content
+        在recyclerview中无法正确解析
+    -->
+    <net.jiawa.jobhunter.widgets.MovieStarView
         android:id="@+id/ms_stars"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="12dp"
         android:layout_below="@id/tv_author"
         android:layout_alignParentLeft="true"
-        app:MovieStars="15"/>-->
+        app:MovieStars="15"/>
     <TextView
         android:id="@+id/tv_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_author"
+        android:layout_below="@id/ms_stars"
         android:layout_marginTop="3dp"/>
     <View
         android:id="@+id/v_divider_line"
