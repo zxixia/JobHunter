@@ -25,8 +25,8 @@
     -->
     <net.jiawa.jobhunter.widgets.MovieStarView
         android:id="@+id/ms_stars"
-        android:layout_width="60dp"
-        android:layout_height="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/tv_author"
         android:layout_alignParentLeft="true"
         app:MovieStars="15"/>

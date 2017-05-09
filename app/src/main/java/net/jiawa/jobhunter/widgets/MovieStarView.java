@@ -16,6 +16,7 @@ import android.view.View;
 
 import net.jiawa.debughelper.XLog;
 import net.jiawa.jobhunter.R;
+import net.jiawa.jobhunter.helper.Debug;
 
 /**
  * Created by zhaoxin5 on 2017/4/18.
@@ -116,19 +117,27 @@ public class MovieStarView extends View {
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
 
-        if (specMode == MeasureSpec.EXACTLY) {
+        XLog.d(true, 1, Debug.MeasureSpec(measureSpec));
+
+        int minSize = (int) (density * 60);
+
+        if (specMode == MeasureSpec.EXACTLY && specSize > 0) {
             // We were told how big to be
             // 这里针对的就是指定了width和height的情形了
             result = specSize;
-        } else {
+        } else if (specSize > 0){
             // 指定最小宽度
             // 04-18 17:33:02.814 D/xixia-1 ( 9173): [1][DogFood][2       ][  124][measureWidth][net.jiawa.jobhunter.widgets.MovieStarView][density * 50: 150.0, specSize: 1080]
             // 04-18 17:33:02.814 D/xixia-1 ( 9173): [1][DogFood][3       ][  145][measureHeight][net.jiawa.jobhunter.widgets.MovieStarView][density * 15: 45.0, specSize: 1776]
             // 这里传的是父控件的大小
             // 所以要取最小值
-            result = (int) Math.min(density * 60, specSize);
+
+            // 注意这里传进来的specSize有可能是0
+            result = Math.min(minSize, specSize);
+        } else {
+            result = minSize;
         }
-        XLog.d(false, 1, "density * 60: " + density * 60 + ", specSize: " + specSize);
+        XLog.d(false, 1, "minSize: " + minSize + ", specSize: " + specSize);
         return result;
     }
 
@@ -142,19 +151,28 @@ public class MovieStarView extends View {
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
 
-        if (specMode == MeasureSpec.EXACTLY) {
+        XLog.d(true, 1, Debug.MeasureSpec(measureSpec));
+
+        int minSize = (int) (density * 12);
+
+        if (specMode == MeasureSpec.EXACTLY && specSize > 0) {
             // We were told how big to be
             // 这里针对的就是指定了width和height的情形了
             result = specSize;
-        } else {
+        } else if (specSize > 0){
             // 指定最小高度
             // 04-18 17:33:02.814 D/xixia-1 ( 9173): [1][DogFood][2       ][  124][measureWidth][net.jiawa.jobhunter.widgets.MovieStarView][density * 50: 150.0, specSize: 1080]
             // 04-18 17:33:02.814 D/xixia-1 ( 9173): [1][DogFood][3       ][  145][measureHeight][net.jiawa.jobhunter.widgets.MovieStarView][density * 15: 45.0, specSize: 1776]
             // 这里传的是父控件的大小
             // 所以要取最小值
-            result = (int) Math.min(density * 12, specSize);
+
+            // 注意这里传进来的specSize有可能是0
+            result = Math.min(minSize, specSize);
+        } else {
+            result = minSize;
         }
-        XLog.d(false, 1, "density * 15: " + density * 15 + ", specSize: " + specSize);
+
+        XLog.d(false, 1, "minSize: " + minSize + ", specSize: " + specSize);
         return result;
     }
 
