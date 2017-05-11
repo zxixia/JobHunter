@@ -1,4 +1,4 @@
-package com.smartisanos.sidebar.util.anim;
+package net.jiawa.jobhunter.base.anim;
 
 
 import android.animation.Animator;
@@ -6,19 +6,15 @@ import android.animation.ObjectAnimator;
 import android.animation.AnimatorSet;
 import android.view.View;
 
-import com.smartisanos.sidebar.util.LOG;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Process;
-
 public class Anim {
-    private static final LOG log = LOG.getInstance(Anim.class);
+    /*private static final LOG log = LOG.getInstance(Anim.class);
     private static final boolean DBG_ANIM = true;
     static {
         if (!DBG_ANIM) {log.close();}
-    }
+    }*/
 
     public final static int QUAD_IN      = AnimInterpolator.QUAD_IN;
     public final static int QUAD_OUT     = AnimInterpolator.QUAD_OUT;
