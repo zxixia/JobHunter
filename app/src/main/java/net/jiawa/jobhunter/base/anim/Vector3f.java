@@ -1,4 +1,4 @@
-package com.smartisanos.sidebar.util.anim;
+package net.jiawa.jobhunter.base.anim;
 
 public class Vector3f {
     public float x;
