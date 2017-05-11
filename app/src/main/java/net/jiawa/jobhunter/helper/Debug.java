@@ -20,6 +20,22 @@ public class Debug {
         return sb.toString();
     }
 
+    public static String get(int visibility) {
+        String rtValue = "";
+        switch(visibility) {
+            case View.VISIBLE:
+                rtValue = "VISIBLE";
+                break;
+            case View.INVISIBLE:
+                rtValue = "INVISIBLE";
+                break;
+            case View.GONE:
+                rtValue = "GONE";
+                break;
+        }
+        return rtValue;
+    }
+
     public static String getMeasureSpecMode(int mode) {
         String rtValue = "";
         switch (mode) {

@@ -18,11 +18,6 @@
         android:layout_height="20dp"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/tv_title"/>
-    <!--
-        这里要指定高度和宽度
-        直接用wrap_content
-        在recyclerview中无法正确解析
-    -->
     <net.jiawa.jobhunter.widgets.MovieStarView
         android:id="@+id/ms_stars"
         android:layout_width="wrap_content"
